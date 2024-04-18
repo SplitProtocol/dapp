@@ -21,7 +21,6 @@ export const fetchTokenGetOutAmount = async (
     },
     method: "POST" as const,
     body: JSON.stringify(body),
-    mode: "cors"
   });
 
   const result = await response.json();
