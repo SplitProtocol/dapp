@@ -15,6 +15,7 @@ export const fetchTokenListByChainId = async (
     `${import.meta.env.VITE_API_URL}/${chainId}/getTokenList`,
     {
       method: "GET" as const,
+      mode: "cors",
     }
   );
   const result = await response.json();
