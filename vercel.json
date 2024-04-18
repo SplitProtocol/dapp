@@ -1,0 +1,14 @@
+{
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/1inchapi/:match*",
+      "destination": "https://api.1inch.dev/:match*"
+    },
+    {
+      "source": "/chartapi/:match*",
+      "destination": "https://api.dexscreener.com/:match*"
+    },
+    { "source": "/(.*)", "destination": "/" }
+  ]
+}
