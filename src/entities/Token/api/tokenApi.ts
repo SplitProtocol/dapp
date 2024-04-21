@@ -12,7 +12,7 @@ export const fetchTokenListByChainId = async (
   chainId?: number | null
 ): Promise<TokenListItem[]> => {
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/${chainId}/getTokenList`,
+    `${import.meta.env.DEV ? '/splitexapi' : import.meta.env.VITE_API_URL}/${chainId}/getTokenList`,
     {
       method: "GET" as const,
     }

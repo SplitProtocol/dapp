@@ -34,6 +34,7 @@ type SwapFormHomeProps = {
   priceFrom?: Record<string, string> | null;
   priceTo?: Record<string, string> | null;
   slippage: string;
+  getAmount: string;
   payAmount: string;
   setPayAmount: (value: string) => void;
 };
@@ -45,6 +46,7 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
     priceFrom,
     priceTo,
     payAmount,
+    getAmount,
     slippage,
     onOpenDestinationFrom,
     onOpenDestinationTo,
@@ -204,7 +206,7 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
             placeholder="0.0"
             sizeInput="large"
             readOnly
-            value={payAmount}
+            value={getAmount}
             tokenPriceFromUSD={
               priceFrom &&
               Number(
