@@ -47,7 +47,7 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
     priceFrom,
     priceTo,
     payAmount,
-    getAmount,
+    memoizedGetOut,
     slippage,
     onOpenDestinationFrom,
     onOpenDestinationTo,
@@ -207,7 +207,8 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
             placeholder="0.0"
             sizeInput="large"
             readOnly
-            value={getAmount}
+            // value={getAmount}
+            value={memoizedGetOut}
             tokenPriceFromUSD={
               priceFrom &&
               Number(

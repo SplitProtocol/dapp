@@ -13,6 +13,7 @@ import {
 } from "@/entities/Token";
 import { useDebounce } from "@/shared/lib/useDebounce";
 import { useFetchTokenGetOutAmount } from "../api/swapApi";
+import { ethers } from "ethers";
 
 export const useSwapForm = () => {
   const { chainId, connector, address } = useAccount();
@@ -67,10 +68,17 @@ export const useSwapForm = () => {
       destChainID: destinationTo.chainId,
       fromDecimals: destinationFrom.decimals,
     }),
-    [destinationFrom.address, destinationFrom.decimals, destinationTo.address, destinationTo.chainId, debounced]
+    [
+      destinationFrom.address,
+      destinationFrom.decimals,
+      destinationTo.address,
+      destinationTo.chainId,
+      debounced,
+    ]
   ) as TokenGetOutAmountState;
 
-  const { data: getAmount, isLoading: isLoadingGetAmount } = useFetchTokenGetOutAmount(memoizedGetOutAmount)
+  const { data: getAmount, isLoading: isLoadingGetAmount } =
+    useFetchTokenGetOutAmount(memoizedGetOutAmount);
 
   const handleBackAction = () => setActiveScreen(SwapHeaderCaptions.HOME);
 
@@ -120,6 +128,17 @@ export const useSwapForm = () => {
 
   console.log(getAmount);
 
+  const memoizedGetOut = useMemo(
+    () => {
+      if (getAmount && destinationTo.decimals) {
+        return ethers.formatUnits(getAmount.out, destinationTo.decimals)
+      } else {
+        return "0"
+      }
+    },
+    [getAmount, destinationTo.decimals]
+  );
+
   return {
     activeScreen,
     destinationFrom,
@@ -131,7 +150,7 @@ export const useSwapForm = () => {
     isLoadingPriceTo,
     payAmount,
     slippage,
-    getAmount,
+    memoizedGetOut,
     isLoadingGetAmount,
     handleBackAction,
     setPayAmount,

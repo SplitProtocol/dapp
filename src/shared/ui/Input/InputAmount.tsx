@@ -69,12 +69,14 @@ export const InputAmount: FC<NumberInputProps> = (props) => {
   const memoizedValue = useMemo(
     () =>
       calculateTokenGetAmount(
-        value ? Number(ethers.formatEther(value)) : 0,
+        Number(value),
         Number(tokenPriceFromUSD),
         Number(tokenPriceToUSD)
       ),
     [value, tokenPriceFromUSD, tokenPriceToUSD]
   );
+
+  console.log(memoizedValue, value)
 
   return (
     <div className={inputWrapperClassName}>
