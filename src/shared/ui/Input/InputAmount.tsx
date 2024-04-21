@@ -6,7 +6,6 @@ import {
   type InputBaseProps,
   NumberInput as MantineNumberInput,
   type NumberInputProps as MantineNumberInputProps,
-  Loader,
   Skeleton,
   rem,
 } from "@mantine/core";
