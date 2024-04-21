@@ -75,7 +75,7 @@ export const InputAmount: FC<NumberInputProps> = (props) => {
   //   [value, tokenPriceFromUSD, tokenPriceToUSD]
   // );
 
-  // console.log(memoizedValue, value)
+  console.log(`value: ${value}`)
 
   return (
     <div className={inputWrapperClassName}>
