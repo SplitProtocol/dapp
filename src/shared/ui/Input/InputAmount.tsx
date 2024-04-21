@@ -65,17 +65,17 @@ export const InputAmount: FC<NumberInputProps> = (props) => {
     inputSizeClassName[sizeInput]
   );
 
-  const memoizedValue = useMemo(
-    () =>
-      calculateTokenGetAmount(
-        Number(value),
-        Number(tokenPriceFromUSD),
-        Number(tokenPriceToUSD)
-      ),
-    [value, tokenPriceFromUSD, tokenPriceToUSD]
-  );
+  // const memoizedValue = useMemo(
+  //   () =>
+  //     calculateTokenGetAmount(
+  //       Number(value),
+  //       Number(tokenPriceFromUSD),
+  //       Number(tokenPriceToUSD)
+  //     ),
+  //   [value, tokenPriceFromUSD, tokenPriceToUSD]
+  // );
 
-  console.log(memoizedValue, value)
+  // console.log(memoizedValue, value)
 
   return (
     <div className={inputWrapperClassName}>
@@ -102,7 +102,7 @@ export const InputAmount: FC<NumberInputProps> = (props) => {
             withAsterisk={isRequired}
             placeholder={placeholder}
             rightSection={rightSection}
-            value={memoizedValue}
+            value={value}
             onChange={onChange}
             hideControls
             inputWrapperOrder={["label", "input", "description", "error"]}
@@ -117,7 +117,7 @@ export const InputAmount: FC<NumberInputProps> = (props) => {
             error={error}
           />
           <div className="text-xs text-left text-white/50 pl-3">
-            ~${calculateTokenCost(memoizedValue, Number(tokenPriceToUSD))}
+            ~${calculateTokenCost(value, Number(tokenPriceToUSD))}
           </div>
         </div>
       </div>
