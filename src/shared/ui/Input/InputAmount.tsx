@@ -1,14 +1,13 @@
 import { renderNewtworkLogoByChainId } from "@/entities/Network";
 import { SwapDestinationState } from "@/features/SwapForm/model/types";
 import { clsxMerge } from "@/shared/lib/clsxMerge";
-import { calculateTokenCost, calculateTokenGetAmount } from "@/shared/lib/utils";
+import { calculateTokenCost } from "@/shared/lib/utils";
 import {
   type InputBaseProps,
   NumberInput as MantineNumberInput,
   type NumberInputProps as MantineNumberInputProps,
 } from "@mantine/core";
 import {
-  useMemo,
   type FC,
   type InputHTMLAttributes,
   type ReactNode,
