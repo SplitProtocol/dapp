@@ -99,7 +99,7 @@ export const InputAmount: FC<NumberInputProps> = (props) => {
           </div>
         </div>
         <div className="flex flex-col w-full">
-          {isLoading && <Skeleton width={rem(160)} height={rem(30)} className="rounded-lg opacity-50" />}
+          {isLoading && <Skeleton width={rem(160)} height={rem(20)} classNames={{ root: "opacity-10 my-[0.625rem]" }} />}
           {!isLoading && <MantineNumberInput
             {...restProps}
             type={type}
