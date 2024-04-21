@@ -126,8 +126,6 @@ export const useSwapForm = () => {
     }
   }, [destinationFrom, destinationTo, setSymbols]);
 
-  console.log(getAmount);
-
   const memoizedGetOut = useMemo(
     () => {
       if (getAmount && destinationTo.decimals) {
@@ -138,6 +136,8 @@ export const useSwapForm = () => {
     },
     [getAmount, destinationTo.decimals]
   );
+
+  console.log('getAmountgetAmount', getAmount, memoizedGetOut);
 
   return {
     activeScreen,
