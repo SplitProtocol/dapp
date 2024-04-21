@@ -23,7 +23,6 @@ import { useAccount } from "wagmi";
 import { SlippageControl } from "@/features/SlippageControl";
 import { slippageOptions } from "../lib/consts";
 import { useConnectButton } from "@/features/ConnectButton";
-import { ethers } from "ethers";
 
 type SwapFormHomeProps = {
   destinationFrom: SwapDestinationState;
@@ -47,7 +46,7 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
     priceFrom,
     priceTo,
     payAmount,
-    memoizedGetOut,
+    getAmount,
     slippage,
     onOpenDestinationFrom,
     onOpenDestinationTo,
@@ -208,7 +207,7 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
             sizeInput="large"
             readOnly
             // value={getAmount}
-            value={memoizedGetOut}
+            value={getAmount}
             tokenPriceFromUSD={
               priceFrom &&
               Number(

@@ -7,7 +7,6 @@ import {
   NumberInput as MantineNumberInput,
   type NumberInputProps as MantineNumberInputProps,
 } from "@mantine/core";
-import { ethers } from "ethers";
 import {
   useMemo,
   type FC,

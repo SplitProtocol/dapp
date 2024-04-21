@@ -14,7 +14,7 @@ export const SwapForm = () => {
     pricesTokenFrom,
     pricesTokenTo,
     payAmount,
-    getAmount,
+    memoizedGetOut,
     slippage,
     setPayAmount,
     setSlippage,
@@ -36,7 +36,7 @@ export const SwapForm = () => {
               slippage={slippage}
               setSlippage={setSlippage}
               switchDestinations={switchDestinations}
-              getAmount={getAmount?.out || ''}
+              getAmount={memoizedGetOut}
               onOpenDestinationFrom={() =>
                 handleOpenDestination(SwapHeaderCaptions.FROM)
               }
@@ -77,7 +77,7 @@ export const SwapForm = () => {
               destinationFrom={destinationFrom}
               destinationTo={destinationTo}
               slippage={slippage}
-              getAmount={getAmount?.out || ''}
+              getAmount={memoizedGetOut}
               setSlippage={setSlippage}
               switchDestinations={switchDestinations}
               onOpenDestinationFrom={() =>
