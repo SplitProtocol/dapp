@@ -129,8 +129,7 @@ export const useSwapForm = () => {
   const memoizedGetOut = useMemo(
     () => {
       if (getAmount && destinationTo.decimals) {
-        const weiBN = BigInt(getAmount.out);
-        return ethers.formatUnits(weiBN, destinationTo.decimals)
+        return ethers.formatEther(getAmount.out)
       } else {
         return "0"
       }
