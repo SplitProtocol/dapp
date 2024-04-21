@@ -36,6 +36,7 @@ type SwapFormHomeProps = {
   slippage: string;
   getAmount: string;
   payAmount: string;
+  isLoadingGetAmount: boolean;
   setPayAmount: (value: string) => void;
 };
 
@@ -48,6 +49,7 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
     payAmount,
     getAmount,
     slippage,
+    isLoadingGetAmount,
     onOpenDestinationFrom,
     onOpenDestinationTo,
     switchDestinations,
@@ -206,6 +208,7 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
             placeholder="0.0"
             sizeInput="large"
             readOnly
+            isLoading={isLoadingGetAmount}
             // value={getAmount}
             value={getAmount}
             tokenPriceFromUSD={

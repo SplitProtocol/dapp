@@ -6,6 +6,9 @@ import {
   type InputBaseProps,
   NumberInput as MantineNumberInput,
   type NumberInputProps as MantineNumberInputProps,
+  Loader,
+  Skeleton,
+  rem,
 } from "@mantine/core";
 import {
   type FC,
@@ -28,6 +31,7 @@ type NumberInputProps = InputBaseProps &
     token: SwapDestinationState;
     tokenPriceFromUSD?: number | null;
     tokenPriceToUSD?: number | null;
+    isLoading?: boolean;
   };
 
 const inputWrapperClassName =
@@ -56,6 +60,7 @@ export const InputAmount: FC<NumberInputProps> = (props) => {
     isRequired,
     tokenPriceFromUSD,
     tokenPriceToUSD,
+    isLoading,
     ...restProps
   } = props;
 
@@ -95,7 +100,8 @@ export const InputAmount: FC<NumberInputProps> = (props) => {
           </div>
         </div>
         <div className="flex flex-col w-full">
-          <MantineNumberInput
+          {isLoading && <Skeleton width={rem(160)} height={rem(30)} className="rounded-lg opacity-50" />}
+          {!isLoading && <MantineNumberInput
             {...restProps}
             type={type}
             withAsterisk={isRequired}
@@ -114,7 +120,7 @@ export const InputAmount: FC<NumberInputProps> = (props) => {
               description: "text-black/50",
             }}
             error={error}
-          />
+          />}
           <div className="text-xs text-left text-white/50 pl-3">
             ~${calculateTokenCost(value, Number(tokenPriceToUSD))}
           </div>

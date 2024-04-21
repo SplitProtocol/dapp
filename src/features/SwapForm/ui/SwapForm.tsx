@@ -16,6 +16,7 @@ export const SwapForm = () => {
     payAmount,
     memoizedGetOut,
     slippage,
+    isLoadingGetAmount,
     setPayAmount,
     setSlippage,
     switchDestinations,
@@ -35,6 +36,7 @@ export const SwapForm = () => {
               destinationTo={destinationTo}
               slippage={slippage}
               setSlippage={setSlippage}
+              isLoadingGetAmount={isLoadingGetAmount}
               switchDestinations={switchDestinations}
               getAmount={memoizedGetOut}
               onOpenDestinationFrom={() =>
@@ -78,6 +80,7 @@ export const SwapForm = () => {
               destinationTo={destinationTo}
               slippage={slippage}
               getAmount={memoizedGetOut}
+              isLoadingGetAmount={isLoadingGetAmount}
               setSlippage={setSlippage}
               switchDestinations={switchDestinations}
               onOpenDestinationFrom={() =>
