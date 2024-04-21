@@ -7,6 +7,7 @@ import {
   NumberInput as MantineNumberInput,
   type NumberInputProps as MantineNumberInputProps,
 } from "@mantine/core";
+import { ethers } from "ethers";
 import {
   useMemo,
   type FC,
@@ -68,7 +69,7 @@ export const InputAmount: FC<NumberInputProps> = (props) => {
   const memoizedValue = useMemo(
     () =>
       calculateTokenGetAmount(
-        Number(value),
+        value ? Number(ethers.formatEther(value)) : 0,
         Number(tokenPriceFromUSD),
         Number(tokenPriceToUSD)
       ),

@@ -23,6 +23,7 @@ import { useAccount } from "wagmi";
 import { SlippageControl } from "@/features/SlippageControl";
 import { slippageOptions } from "../lib/consts";
 import { useConnectButton } from "@/features/ConnectButton";
+import { ethers } from "ethers";
 
 type SwapFormHomeProps = {
   destinationFrom: SwapDestinationState;
