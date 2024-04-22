@@ -68,18 +68,6 @@ export const InputAmount: FC<NumberInputProps> = (props) => {
     inputSizeClassName[sizeInput]
   );
 
-  // const memoizedValue = useMemo(
-  //   () =>
-  //     calculateTokenGetAmount(
-  //       Number(value),
-  //       Number(tokenPriceFromUSD),
-  //       Number(tokenPriceToUSD)
-  //     ),
-  //   [value, tokenPriceFromUSD, tokenPriceToUSD]
-  // );
-
-  console.log(`value: ${value}`)
-
   return (
     <div className={inputWrapperClassName}>
       <div className="text-sm text-left font-bold text-white mb-2">

@@ -5,7 +5,6 @@ import { Skeleton, rem } from "@mantine/core";
 export const PortfolioCard = () => {
   const { address, localBalance, } = useProfileCard();
 
-  console.log(localBalance)
   return (
     <div className="flex flex-col w-full rounded-lg bg-gray-800 px-8 py-8">
       {!address && <Skeleton width={rem(220)} height={rem(16)} className="opacity-50" />}

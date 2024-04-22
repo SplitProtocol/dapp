@@ -31,6 +31,8 @@ type SwapFormHomeProps = {
   onOpenDestinationTo: () => void;
   switchDestinations: () => void;
   setSlippage: (value: string) => void;
+  onApprove: () => void;
+  isApproveAvailable: boolean;
   priceFrom?: Record<string, string> | null;
   priceTo?: Record<string, string> | null;
   slippage: string;
@@ -50,6 +52,8 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
     getAmount,
     slippage,
     isLoadingGetAmount,
+    isApproveAvailable,
+    onApprove,
     onOpenDestinationFrom,
     onOpenDestinationTo,
     switchDestinations,
@@ -76,6 +80,9 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
   );
 
   const isDisplayedInputs = destinationFrom.address && destinationTo.address;
+
+  const isButtonDisabled = Number(payAmount) === 0 || !isApproveAvailable
+
   return (
     <div className="flex flex-col w-full gap-y-4">
       <div className={mergedClassNames}>
@@ -281,9 +288,14 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
             Connect wallet
           </Button>
         )}
-        {address && (
-          <Button size="lg" color="base" fullWidth>
+        {address && isApproveAvailable && (
+          <Button size="lg" color="base" fullWidth disabled={isButtonDisabled}>
             Swap
+          </Button>
+        )}
+        {address && !isApproveAvailable && (
+          <Button size="lg" color="base" fullWidth onClick={onApprove}>
+            Approve
           </Button>
         )}
       </div>

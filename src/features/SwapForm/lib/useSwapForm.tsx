@@ -14,6 +14,7 @@ import {
 import { useDebounce } from "@/shared/lib/useDebounce";
 import { useFetchTokenGetOutAmount } from "../api/swapApi";
 import { ethers } from "ethers";
+import { useWeb3 } from "@/shared/lib/useWeb3";
 
 export const useSwapForm = () => {
   const { chainId, connector, address } = useAccount();
@@ -30,18 +31,26 @@ export const useSwapForm = () => {
     () => destinationStateDefault
   );
   const [payAmount, setPayAmount] = useState("");
+  const [isApproveAvailable, setIsApproveAvailable] = useState(false);
 
   const debounced = useDebounce(payAmount, 1000);
 
   const [switchButtonClicked, setSwitchButtonClicked] = useState(false);
   const [slippage, setSlippage] = useState(slippageOptions[0].value);
-  const result = useReadContract({
+
+  const { approve } = useWeb3();
+
+  const { data: allowance } = useReadContract({
     abi: abiERC20,
     address: (destinationFrom.address as `0x${string}`) || "0x",
-    functionName: "balanceOf",
+    functionName: "allowance",
+    args: [address, import.meta.env.VITE_ROUTER_CONTRACT],
     chainId,
+    query: {
+      enabled: !!address && !!destinationFrom.address,
+    },
   });
-  console.log(result?.data);
+
   const { data: pricesTokenFrom, isLoading: isLoadingPriceFrom } =
     useFetchTokenPriceByAddresses(
       {
@@ -85,6 +94,15 @@ export const useSwapForm = () => {
   const handleOpenDestination = (destination: SwapHeaderCaptions) =>
     setActiveScreen(destination);
 
+  const handleApprove = useCallback(async () => {
+    if (!destinationFrom.decimals || !destinationFrom.address) return;
+    await approve(
+      destinationFrom.address as `0x${string}`,
+      import.meta.env.VITE_ROUTER_CONTRACT,
+      BigInt(Number(payAmount) * 10 ** destinationFrom.decimals).toString()
+    );
+  }, [approve, destinationFrom.address, destinationFrom.decimals, payAmount]);
+
   const switchDestinations = useCallback(async () => {
     if (destinationFrom.chainId === destinationTo.chainId) {
       setDestinationTo(destinationFrom);
@@ -96,6 +114,20 @@ export const useSwapForm = () => {
       setSwitchButtonClicked(true);
     }
   }, [connector, destinationTo, destinationFrom, switchChain]);
+
+  useEffect(() => {
+    if (!Number.isNaN(payAmount) && destinationFrom.decimals) {
+      const bigAmount = BigInt(Number(payAmount) * 10 ** destinationFrom.decimals);
+      if (typeof allowance !== "bigint") return setIsApproveAvailable(false);
+      if (typeof allowance === "bigint") {
+        if (allowance >= bigAmount) {
+          return setIsApproveAvailable(true);
+        } else {
+          return setIsApproveAvailable(false);
+        }
+      }
+    }
+  }, [allowance, payAmount, destinationFrom]);
 
   useEffect(() => {
     if (switchButtonClicked && isSuccessSwitchChain) {
@@ -126,18 +158,15 @@ export const useSwapForm = () => {
     }
   }, [destinationFrom, destinationTo, setSymbols]);
 
-  const memoizedGetOut = useMemo(
-    () => {
-      if (getAmount && destinationTo.decimals) {
-        return ethers.formatEther(getAmount.out)
-      } else {
-        return "0"
-      }
-    },
-    [getAmount, destinationTo.decimals]
-  );
+  const memoizedGetOut = useMemo(() => {
+    if (getAmount && destinationTo.decimals) {
+      return ethers.formatEther(getAmount.out);
+    } else {
+      return "0";
+    }
+  }, [getAmount, destinationTo.decimals]);
 
-  console.log('getAmountgetAmount', getAmount, memoizedGetOut);
+  console.log("getAmountgetAmount", getAmount, memoizedGetOut);
 
   return {
     activeScreen,
@@ -152,7 +181,10 @@ export const useSwapForm = () => {
     slippage,
     memoizedGetOut,
     isLoadingGetAmount,
+    allowance,
+    isApproveAvailable,
     handleBackAction,
+    handleApprove,
     setPayAmount,
     setDestinationFrom,
     setDestinationTo,

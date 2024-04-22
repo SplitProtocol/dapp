@@ -15,9 +15,11 @@ export const SwapForm = () => {
     pricesTokenTo,
     payAmount,
     memoizedGetOut,
+    isApproveAvailable,
     slippage,
     isLoadingGetAmount,
     setPayAmount,
+    handleApprove,
     setSlippage,
     switchDestinations,
     handleBackAction,
@@ -35,6 +37,8 @@ export const SwapForm = () => {
               destinationFrom={destinationFrom}
               destinationTo={destinationTo}
               slippage={slippage}
+              isApproveAvailable={isApproveAvailable}
+              onApprove={handleApprove}
               setSlippage={setSlippage}
               isLoadingGetAmount={isLoadingGetAmount}
               switchDestinations={switchDestinations}
@@ -80,6 +84,8 @@ export const SwapForm = () => {
               destinationTo={destinationTo}
               slippage={slippage}
               getAmount={memoizedGetOut}
+              isApproveAvailable={isApproveAvailable}
+              onApprove={handleApprove}
               isLoadingGetAmount={isLoadingGetAmount}
               setSlippage={setSlippage}
               switchDestinations={switchDestinations}
@@ -101,6 +107,8 @@ export const SwapForm = () => {
       destinationFrom,
       destinationTo,
       slippage,
+      isApproveAvailable,
+      handleApprove,
       setSlippage,
       isLoadingGetAmount,
       switchDestinations,
