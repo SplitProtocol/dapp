@@ -166,7 +166,7 @@ export const useSwapForm = () => {
     }
   }, [getAmount, destinationTo.decimals]);
 
-  console.log("getAmountgetAmount", getAmount, memoizedGetOut);
+  console.log("getAmountgetAmount", getAmount, memoizedGetOut, 'hui');
 
   return {
     activeScreen,
