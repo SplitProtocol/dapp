@@ -7,6 +7,7 @@ import {
 import {
   Collapse as MantineCollapse,
   ActionIcon as MantineActionButton,
+  Loader,
 } from "@mantine/core";
 import {
   IconArrowsRightLeft,
@@ -38,6 +39,8 @@ type SwapFormHomeProps = {
   slippage: string;
   getAmount: string;
   payAmount: string;
+  isPending: boolean;
+  onSwap: () => void;
   isLoadingGetAmount: boolean;
   setPayAmount: (value: string) => void;
 };
@@ -53,12 +56,15 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
     slippage,
     isLoadingGetAmount,
     isApproveAvailable,
+    isPending,
     onApprove,
+    onSwap,
     onOpenDestinationFrom,
     onOpenDestinationTo,
     switchDestinations,
     setPayAmount,
     setSlippage,
+
   } = props;
 
   const { handleOpenModal } = useConnectButton();
@@ -81,7 +87,7 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
 
   const isDisplayedInputs = destinationFrom.address && destinationTo.address;
 
-  const isButtonDisabled = Number(payAmount) === 0 || !isApproveAvailable
+  const isButtonDisabled = Number(payAmount) === 0 || !isApproveAvailable || isPending
 
   return (
     <div className="flex flex-col w-full gap-y-4">
@@ -218,12 +224,12 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
             isLoading={isLoadingGetAmount}
             // value={getAmount}
             value={getAmount}
-            tokenPriceFromUSD={
-              priceFrom &&
-              Number(
-                priceFrom[destinationFrom.address as keyof typeof priceFrom]
-              )
-            }
+            // tokenPriceFromUSD={
+            //   priceFrom &&
+            //   Number(
+            //     priceFrom[destinationFrom.address as keyof typeof priceFrom]
+            //   )
+            // }
             tokenPriceToUSD={
               priceTo &&
               Number(priceTo[destinationTo.address as keyof typeof priceTo])
@@ -289,8 +295,8 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
           </Button>
         )}
         {address && isApproveAvailable && (
-          <Button size="lg" color="base" fullWidth disabled={isButtonDisabled}>
-            Swap
+          <Button size="lg" color="base" fullWidth disabled={isButtonDisabled} onClick={onSwap}>
+            {isPending ? <Loader size='xs' color="white" /> : 'Swap'}
           </Button>
         )}
         {address && !isApproveAvailable && (

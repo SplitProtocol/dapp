@@ -18,7 +18,9 @@ export const SwapForm = () => {
     isApproveAvailable,
     slippage,
     isLoadingGetAmount,
+    isPending,
     setPayAmount,
+    handleSwap,
     handleApprove,
     setSlippage,
     switchDestinations,
@@ -40,6 +42,8 @@ export const SwapForm = () => {
               isApproveAvailable={isApproveAvailable}
               onApprove={handleApprove}
               setSlippage={setSlippage}
+              isPending={isPending}
+              onSwap={handleSwap}
               isLoadingGetAmount={isLoadingGetAmount}
               switchDestinations={switchDestinations}
               getAmount={memoizedGetOut}
@@ -88,6 +92,8 @@ export const SwapForm = () => {
               onApprove={handleApprove}
               isLoadingGetAmount={isLoadingGetAmount}
               setSlippage={setSlippage}
+              isPending={isPending}
+              onSwap={handleSwap}
               switchDestinations={switchDestinations}
               onOpenDestinationFrom={() =>
                 handleOpenDestination(SwapHeaderCaptions.FROM)
@@ -118,6 +124,8 @@ export const SwapForm = () => {
       payAmount,
       setPayAmount,
       chainId,
+      isPending,
+      handleSwap,
       setDestinationFrom,
       handleBackAction,
       setDestinationTo,

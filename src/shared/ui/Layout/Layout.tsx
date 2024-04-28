@@ -1,5 +1,5 @@
 import { clsxMerge } from "@/shared/lib/clsxMerge";
-import { type FC, type ReactNode } from "react";
+import type{ FC, ReactNode } from "react";
 import { Outlet } from "react-router-dom";
 
 type LayoutProps = {

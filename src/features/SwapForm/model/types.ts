@@ -27,3 +27,24 @@ export type TokenGetOutAmountBody = {
   volume: string;
   destChainID: number;
 }
+
+export type SwapBody = {
+  fromToken: string;
+  toToken: string;
+  volume: string;
+  trader: string;
+  unsignedHash: string;
+  signedHash: string;
+  destChainID: number;
+  partner?: string;
+  partnerShare?: string;
+  burnAmount?: number;
+  slippage?: number;
+  stopLoss?: string;
+  takeProfit?: string;
+  trailingStopLoss?: string;
+}
+
+export type SwapResponse = {
+  txhash: string;
+}

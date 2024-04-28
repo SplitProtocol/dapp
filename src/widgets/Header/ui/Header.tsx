@@ -4,8 +4,10 @@ import { navigationRoutes } from "@/shared/routes/navigationRoutes";
 import { NavBar } from "@/widgets/NavBar";
 import { Image, Menu, Burger } from "@mantine/core";
 import { Link } from "react-router-dom";
+import { useMedia } from "react-use";
 
 export const Header = () => {
+  const isMobile = useMedia("only screen and (max-width: 768px)", false);
   return (
     <header className="flex flex-col items-center w-full py-4 px-4">
       <div className="flex flex-row w-full justify-between items-center max-w-[81.25rem]">
@@ -25,26 +27,38 @@ export const Header = () => {
         <div className="flex flex-row items-center gap-x-3">
           <NetworkButton />
           <ConnectButton />
-          <Menu shadow="md" width={200} position="bottom-end" classNames={{
-            dropdown: 'bg-gray-800 border-none',
-            itemLabel: 'text-white',
-          }}>
-            <Menu.Target>
-              <Burger classNames={{ burger: "bg-white before:content-['*'] before:bg-white after:content-['*'] after:bg-white" }} />
-            </Menu.Target>
+          {isMobile && (
+            <Menu
+              shadow="md"
+              width={200}
+              position="bottom-end"
+              classNames={{
+                dropdown: "bg-gray-800 border-none",
+                itemLabel: "text-white",
+              }}
+            >
+              <Menu.Target>
+                <Burger
+                  classNames={{
+                    burger:
+                      "bg-white before:content-['*'] before:bg-white after:content-['*'] after:bg-white",
+                  }}
+                />
+              </Menu.Target>
 
-            <Menu.Dropdown>
-              <Menu.Item component={Link} to={navigationRoutes.portfolio}>
-                Portfolio
-              </Menu.Item>
-              <Menu.Item component={Link} to={navigationRoutes.staking}>
-                Staking SPLX
-              </Menu.Item>
-              <Menu.Item component={Link} to={navigationRoutes.trade}>
-                Trade
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
+              <Menu.Dropdown>
+                <Menu.Item component={Link} to={navigationRoutes.portfolio}>
+                  Portfolio
+                </Menu.Item>
+                <Menu.Item component={Link} to={navigationRoutes.staking}>
+                  Staking SPLX
+                </Menu.Item>
+                <Menu.Item component={Link} to={navigationRoutes.trade}>
+                  Trade
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          )}
         </div>
       </div>
     </header>

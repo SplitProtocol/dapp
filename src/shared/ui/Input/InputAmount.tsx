@@ -57,7 +57,7 @@ export const InputAmount: FC<NumberInputProps> = (props) => {
     type,
     token,
     isRequired,
-    tokenPriceFromUSD,
+    // tokenPriceFromUSD,
     tokenPriceToUSD,
     isLoading,
     ...restProps
@@ -87,7 +87,7 @@ export const InputAmount: FC<NumberInputProps> = (props) => {
           </div>
         </div>
         <div className="flex flex-col w-full">
-          {isLoading && <Skeleton width={rem(160)} height={rem(20)} classNames={{ root: "opacity-10 my-[0.625rem]" }} />}
+          {isLoading && <Skeleton width={rem(160)} height={rem(20)} classNames={{ root: "opacity-10 my-[0.625rem] ml-4" }} />}
           {!isLoading && <MantineNumberInput
             {...restProps}
             type={type}

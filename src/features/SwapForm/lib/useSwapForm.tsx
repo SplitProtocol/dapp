@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
+  SwapBody,
   SwapDestinationState,
   SwapHeaderCaptions,
   TokenGetOutAmountState,
@@ -12,9 +13,10 @@ import {
   abiERC20,
 } from "@/entities/Token";
 import { useDebounce } from "@/shared/lib/useDebounce";
-import { useFetchTokenGetOutAmount } from "../api/swapApi";
+import { useFetchTokenGetOutAmount, useSwapTokensApi } from "../api/swapApi";
 import { ethers } from "ethers";
 import { useWeb3 } from "@/shared/lib/useWeb3";
+import { notification, notificationTitles } from "@/shared/helpers/notificationMessages";
 
 export const useSwapForm = () => {
   const { chainId, connector, address } = useAccount();
@@ -37,8 +39,11 @@ export const useSwapForm = () => {
 
   const [switchButtonClicked, setSwitchButtonClicked] = useState(false);
   const [slippage, setSlippage] = useState(slippageOptions[0].value);
+  const [isPending, setIsPending] = useState(false);
 
-  const { approve } = useWeb3();
+  const { approve, signMessage } = useWeb3();
+
+  const { mutateAsync, isPending: isPendingSwap, isSuccess: isSuccessSwap } = useSwapTokensApi();
 
   const { data: allowance } = useReadContract({
     abi: abiERC20,
@@ -93,6 +98,27 @@ export const useSwapForm = () => {
 
   const handleOpenDestination = (destination: SwapHeaderCaptions) =>
     setActiveScreen(destination);
+
+  const handleSwap = useCallback(async () => {
+    try {
+      if (!destinationFrom.address || !destinationFrom.decimals || !destinationTo.address || !destinationTo.decimals || !address || !destinationTo.chainId) return;
+      const singMessages = await signMessage(`Swap ${payAmount} ${destinationFrom.symbol} to ${getAmount} ${destinationTo.symbol}`, setIsPending);
+      if (!singMessages?.signedHash || !singMessages?.unsignedHash) return;
+      const body: SwapBody = {
+        fromToken: destinationFrom.address,
+        toToken: destinationTo.address,
+        volume: ethers.parseUnits(payAmount, destinationFrom.decimals).toString(),
+        trader: address,
+        unsignedHash: singMessages?.unsignedHash,
+        signedHash: singMessages?.signedHash,
+        destChainID: destinationTo.chainId,
+      }
+      await mutateAsync(body);
+      console.log(singMessages)
+    } catch (error) {
+      console.log(error)
+    }
+  }, [address, destinationFrom, destinationTo, mutateAsync, payAmount, getAmount, signMessage])
 
   const handleApprove = useCallback(async () => {
     if (!destinationFrom.decimals || !destinationFrom.address) return;
@@ -158,6 +184,12 @@ export const useSwapForm = () => {
     }
   }, [destinationFrom, destinationTo, setSymbols]);
 
+  useEffect(() => {
+    if (isSuccessSwap) {
+      notification.success(notificationTitles.pending, `Transaction successfully created`)
+    }
+  }, [isSuccessSwap])
+
   const memoizedGetOut = useMemo(() => {
     if (getAmount && destinationTo.decimals) {
       return ethers.formatEther(getAmount.out);
@@ -165,8 +197,6 @@ export const useSwapForm = () => {
       return "0";
     }
   }, [getAmount, destinationTo.decimals]);
-
-  console.log("getAmountgetAmount", getAmount, memoizedGetOut, 'hui');
 
   return {
     activeScreen,
@@ -183,6 +213,9 @@ export const useSwapForm = () => {
     isLoadingGetAmount,
     allowance,
     isApproveAvailable,
+    isPending,
+    isPendingSwap,
+    handleSwap,
     handleBackAction,
     handleApprove,
     setPayAmount,
