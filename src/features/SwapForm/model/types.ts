@@ -47,4 +47,5 @@ export type SwapBody = {
 
 export type SwapResponse = {
   txhash: string;
+  destChainID: number;
 }

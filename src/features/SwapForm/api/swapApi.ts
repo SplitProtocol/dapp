@@ -42,11 +42,6 @@ export const fetchTokenGetOutAmount = async (
   return result;
 };
 
-type SwapMergedResponse = {
-  result: SwapResponse;
-  destChainID: number;
-};
-
 export const swapTokens = async (body: SwapBody) => {
   const { destChainID } = body;
   const response = await fetch(
@@ -95,16 +90,16 @@ export const useFetchTokenGetOutAmount = (body: TokenGetOutAmountState) => {
 };
 
 export const useSwapTokensApi = (): UseMutationResult<
-  SwapMergedResponse,
+  SwapResponse,
   unknown,
   SwapBody
 > => {
   return useMutation({
     mutationFn: (state) => swapTokens(state),
-    onSuccess: (data: SwapMergedResponse) => {
+    onSuccess: (data: SwapResponse) => {
       console.log(data);
       addTransaction({
-        txHash: data.result.txhash,
+        txHash: data.txhash,
         isCompleted: false,
         chainId: data.destChainID,
       });
