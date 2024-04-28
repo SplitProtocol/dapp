@@ -99,10 +99,18 @@ export const useSwapForm = () => {
   const handleOpenDestination = (destination: SwapHeaderCaptions) =>
     setActiveScreen(destination);
 
+  const memoizedGetOut = useMemo(() => {
+    if (getAmount && destinationTo.decimals) {
+      return ethers.formatEther(getAmount.out);
+    } else {
+      return "0";
+    }
+  }, [getAmount, destinationTo.decimals]);
+
   const handleSwap = useCallback(async () => {
     try {
       if (!destinationFrom.address || !destinationFrom.decimals || !destinationTo.address || !destinationTo.decimals || !address || !destinationTo.chainId) return;
-      const singMessages = await signMessage(`Swap ${payAmount} ${destinationFrom.symbol} to ${getAmount} ${destinationTo.symbol}`, setIsPending);
+      const singMessages = await signMessage(`Swap ${payAmount} ${destinationFrom.symbol} to ${memoizedGetOut} ${destinationTo.symbol}`, setIsPending);
       if (!singMessages?.signedHash || !singMessages?.unsignedHash) return;
       const body: SwapBody = {
         fromToken: destinationFrom.address,
@@ -118,7 +126,7 @@ export const useSwapForm = () => {
     } catch (error) {
       console.log(error)
     }
-  }, [address, destinationFrom, destinationTo, mutateAsync, payAmount, getAmount, signMessage])
+  }, [address, destinationFrom, destinationTo, mutateAsync, payAmount, memoizedGetOut, signMessage])
 
   const handleApprove = useCallback(async () => {
     if (!destinationFrom.decimals || !destinationFrom.address) return;
@@ -190,13 +198,7 @@ export const useSwapForm = () => {
     }
   }, [isSuccessSwap])
 
-  const memoizedGetOut = useMemo(() => {
-    if (getAmount && destinationTo.decimals) {
-      return ethers.formatEther(getAmount.out);
-    } else {
-      return "0";
-    }
-  }, [getAmount, destinationTo.decimals]);
+  
 
   return {
     activeScreen,

@@ -1,8 +1,14 @@
-import { PendingTransaction, usePendingTransactionStore } from "@/entities/Transaction";
+import {
+  PendingTransaction,
+  usePendingTransactionStore,
+} from "@/entities/Transaction";
 import { useWeb3 } from "@/shared/lib/useWeb3";
-import { FC, PropsWithChildren, useEffect } from "react";
+import { FC, PropsWithChildren, useEffect, useState } from "react";
 
-export const TransactionCheckerProvider: FC<PropsWithChildren<unknown>> = ({ children }) => {
+export const TransactionCheckerProvider: FC<PropsWithChildren<unknown>> = ({
+  children,
+}) => {
+  const [count, setCount] = useState(0);
   const { checkTransactionByHash } = useWeb3();
   const { transactions, updateTransaction } = usePendingTransactionStore();
 
@@ -10,9 +16,10 @@ export const TransactionCheckerProvider: FC<PropsWithChildren<unknown>> = ({ chi
     let timer: ReturnType<typeof setTimeout>;
     if (transactions.length) {
       timer = setTimeout(() => {
-        transactions.forEach(async(item: PendingTransaction) => {
+        transactions.forEach(async (item: PendingTransaction) => {
           if (!item.isCompleted) {
-            await checkTransactionByHash(item.txHash, updateTransaction)
+            setCount((c) => c + 1);
+            await checkTransactionByHash(item.txHash, updateTransaction);
           }
         });
       }, 1000);
@@ -22,6 +29,6 @@ export const TransactionCheckerProvider: FC<PropsWithChildren<unknown>> = ({ chi
         clearTimeout(timer);
       }
     };
-  }, [checkTransactionByHash, transactions, updateTransaction])
-  return <>{children}</>
-}
+  }, [checkTransactionByHash, transactions, updateTransaction, count]);
+  return <>{children}</>;
+};

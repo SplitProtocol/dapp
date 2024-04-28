@@ -29,7 +29,7 @@ export const fetchTokenPriceByAddresses = async (
   chainId?: number | null
 ): Promise<Record<string, string> | null> => {
   if (!body.tokens[0]) return null;
-  const response = await fetch(`/1inchapi/price/v1.1/${chainId}`, {
+  const response = await fetch(`https://api.1inch.dev/price/v1.1/${chainId}`, {
     headers: {
       ...headers,
       Authorization: `Bearer ${import.meta.env.VITE_1INCH_API_KEY}`,
@@ -55,7 +55,7 @@ export const fetchTokenChartData = async (
     //     ? "/chartapi"
     //     : import.meta.env.VITE_DEXSCREENER_URL
     // }/latest/dex/search/?q=${addresses}`,
-    `/chartapi/latest/dex/search/?q=${addresses}`,
+    `https://api.dexscreener.com/latest/dex/search/?q=${addresses}`,
     {
       headers: {
         ...headers,

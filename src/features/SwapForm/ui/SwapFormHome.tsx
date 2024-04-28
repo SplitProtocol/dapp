@@ -222,7 +222,6 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
             sizeInput="large"
             readOnly
             isLoading={isLoadingGetAmount}
-            // value={getAmount}
             value={getAmount}
             // tokenPriceFromUSD={
             //   priceFrom &&
