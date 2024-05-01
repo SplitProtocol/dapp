@@ -300,7 +300,7 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
         )}
         {address && !isApproveAvailable && (
           <Button size="lg" color="base" fullWidth onClick={onApprove}>
-            Approve
+            {isPending ? <Loader size='xs' color="white" /> : 'Approve'}
           </Button>
         )}
       </div>

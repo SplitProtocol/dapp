@@ -17,6 +17,7 @@ import { useFetchTokenGetOutAmount, useSwapTokensApi } from "../api/swapApi";
 import { ethers } from "ethers";
 import { useWeb3 } from "@/shared/lib/useWeb3";
 import { notification, notificationTitles } from "@/shared/helpers/notificationMessages";
+import { addTransaction } from "@/entities/Transaction";
 
 export const useSwapForm = () => {
   const { chainId, connector, address } = useAccount();
@@ -129,13 +130,16 @@ export const useSwapForm = () => {
   }, [address, destinationFrom, destinationTo, mutateAsync, payAmount, memoizedGetOut, signMessage])
 
   const handleApprove = useCallback(async () => {
-    if (!destinationFrom.decimals || !destinationFrom.address) return;
+    if (!destinationFrom.decimals || !destinationFrom.address || !destinationFrom.chainId) return;
     await approve(
       destinationFrom.address as `0x${string}`,
       import.meta.env.VITE_ROUTER_CONTRACT,
-      BigInt(Number(payAmount) * 10 ** destinationFrom.decimals).toString()
+      destinationFrom.chainId,
+      BigInt(Number(payAmount) * 10 ** destinationFrom.decimals).toString(),
+      setIsPending,
+      addTransaction,
     );
-  }, [approve, destinationFrom.address, destinationFrom.decimals, payAmount]);
+  }, [destinationFrom.decimals, destinationFrom.address, destinationFrom.chainId, approve, payAmount]);
 
   const switchDestinations = useCallback(async () => {
     if (destinationFrom.chainId === destinationTo.chainId) {
