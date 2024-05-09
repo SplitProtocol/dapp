@@ -64,7 +64,6 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
     switchDestinations,
     setPayAmount,
     setSlippage,
-
   } = props;
 
   const { handleOpenModal } = useConnectButton();

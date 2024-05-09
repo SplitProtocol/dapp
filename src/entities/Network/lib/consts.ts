@@ -1,6 +1,10 @@
 export const networkScannerLink = {
-  43114: '',
-  1: 'https://etherscan.io/address'
+  43114: 'https://snowtrace.io',
+  1: 'https://etherscan.io',
+  42161: 'https://etherscan.io',
+  250: 'https://ftmscan.com',
+  56: 'https://bscscan.com',
+  137: 'https://polygonscan.com',
 }
 
 export const newtworkOnCaption = {

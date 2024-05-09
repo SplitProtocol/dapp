@@ -19,7 +19,7 @@ export const TransactionCheckerProvider: FC<PropsWithChildren<unknown>> = ({
         transactions.forEach(async (item: PendingTransaction) => {
           if (!item.isCompleted) {
             setCount((c) => c + 1);
-            await checkTransactionByHash(item.txHash, item.chainId, updateTransaction);
+            await checkTransactionByHash(item.txHash, updateTransaction);
           }
         });
       }, 1000);

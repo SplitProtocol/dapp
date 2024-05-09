@@ -17,10 +17,11 @@ import { useFetchTokenGetOutAmount, useSwapTokensApi } from "../api/swapApi";
 import { ethers } from "ethers";
 import { useWeb3 } from "@/shared/lib/useWeb3";
 import { notification, notificationTitles } from "@/shared/helpers/notificationMessages";
-import { addTransaction } from "@/entities/Transaction";
+import { addTransaction, usePendingTransactionStore } from "@/entities/Transaction";
 
 export const useSwapForm = () => {
   const { chainId, connector, address } = useAccount();
+  const { transactions } = usePendingTransactionStore();
   const { setSymbols, dropChart } = useTokenChartStore();
   const { isSuccess: isSuccessSwitchChain, switchChain } = useSwitchChain();
   const [activeScreen, setActiveScreen] = useState<SwapHeaderCaptions>(
@@ -41,6 +42,7 @@ export const useSwapForm = () => {
   const [switchButtonClicked, setSwitchButtonClicked] = useState(false);
   const [slippage, setSlippage] = useState(slippageOptions[0].value);
   const [isPending, setIsPending] = useState(false);
+  const [localTx, setLocalTx] = useState<string | null>(null);
 
   const { approve, signMessage } = useWeb3();
 
@@ -131,7 +133,7 @@ export const useSwapForm = () => {
 
   const handleApprove = useCallback(async () => {
     if (!destinationFrom.decimals || !destinationFrom.address || !destinationFrom.chainId) return;
-    await approve(
+    const tx = await approve(
       destinationFrom.address as `0x${string}`,
       import.meta.env.VITE_ROUTER_CONTRACT,
       destinationFrom.chainId,
@@ -139,6 +141,7 @@ export const useSwapForm = () => {
       setIsPending,
       addTransaction,
     );
+    if (tx) setLocalTx(tx);
   }, [destinationFrom.decimals, destinationFrom.address, destinationFrom.chainId, approve, payAmount]);
 
   const switchDestinations = useCallback(async () => {
@@ -202,7 +205,15 @@ export const useSwapForm = () => {
     }
   }, [isSuccessSwap])
 
-  
+  useEffect(() => {
+    if (transactions.length) {
+      transactions.forEach((item) => {
+        if (item.txHash === localTx && item.isCompleted) {
+          setIsApproveAvailable(true);
+        }
+      });
+    }
+  }, [transactions, localTx])
 
   return {
     activeScreen,

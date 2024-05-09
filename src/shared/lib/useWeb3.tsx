@@ -3,10 +3,12 @@ import { keccak256, toUtf8Bytes } from "ethers";
 import { useWriteContract, useSignMessage } from "wagmi";
 import { useEthersProvider } from "./useEtherProvider";
 import { PendingTransaction } from "@/entities/Transaction";
+import { notification, notificationTitles } from "../helpers/notificationMessages";
 
 export const useWeb3 = () => {
   const { signMessageAsync } = useSignMessage();
   const { writeContractAsync } = useWriteContract();
+  const provider = useEthersProvider();
   return {
     approve: async (
       address: `0x${string}`,
@@ -26,8 +28,10 @@ export const useWeb3 = () => {
         });
         if (tx) {
           setTransaction({ txHash: tx, isCompleted: false, chainId });
+          console.log(tx);
+          return tx;
         }
-        console.log(tx);
+        return false;
       } catch (error) {
         console.log(error);
       } finally {
@@ -48,17 +52,18 @@ export const useWeb3 = () => {
     },
     checkTransactionByHash: async (
       txHash: string,
-      destChainId: number,
+      // chainId: number,
       updateTransaction: (txHash: string, isCompleted: boolean) => void
     ) => {
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      const provider = useEthersProvider({ chainId: destChainId });
+     
       try {
         if (provider) {
           const checkTx = await provider.getTransactionReceipt(txHash);
           console.log(checkTx)
           if (checkTx && checkTx.status) {
             updateTransaction(txHash, true);
+            notification.success(notificationTitles.success, `Your transaction has been successfully completed! Tx:${txHash}`)
             return true;
           } else {
             return false;

@@ -29,7 +29,7 @@ export const fetchTokenPriceByAddresses = async (
   chainId?: number | null
 ): Promise<Record<string, string> | null> => {
   if (!body.tokens[0]) return null;
-  const response = await fetch(`https://api.1inch.dev/price/v1.1/${chainId}`, {
+  const response = await fetch(`/1inchapi/price/v1.1/${chainId}`, {
     headers: {
       ...headers,
       Authorization: `Bearer ${import.meta.env.VITE_1INCH_API_KEY}`,
@@ -47,6 +47,7 @@ export const fetchTokenPriceByAddresses = async (
 export const fetchTokenChartData = async (
   addresses: string | null,
   chainId?: number | null
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any | null> => {
   // const response = await axios.get(`/chartapi/latest/dex/tokens/${addresses}`, {
   const response = await fetch(
@@ -67,6 +68,7 @@ export const fetchTokenChartData = async (
   const resultJson = await response.json();
   const splitAddresses = addresses?.split("/");
   const result = resultJson.pairs.find(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (item: any) =>
       item.chainId === newtworkName[chainId as keyof typeof newtworkName] &&
       splitAddresses?.includes(item.baseToken.address.toLowerCase()) &&
