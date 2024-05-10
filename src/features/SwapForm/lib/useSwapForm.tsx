@@ -18,6 +18,7 @@ import { ethers } from "ethers";
 import { useWeb3 } from "@/shared/lib/useWeb3";
 import { notification, notificationTitles } from "@/shared/helpers/notificationMessages";
 import { addTransaction, usePendingTransactionStore } from "@/entities/Transaction";
+import { errorHandler } from "@/shared/api/apiClient";
 
 export const useSwapForm = () => {
   const { chainId, connector, address } = useAccount();
@@ -127,21 +128,25 @@ export const useSwapForm = () => {
       await mutateAsync(body);
       console.log(singMessages)
     } catch (error) {
-      console.log(error)
+      errorHandler(error)
     }
   }, [address, destinationFrom, destinationTo, mutateAsync, payAmount, memoizedGetOut, signMessage])
 
   const handleApprove = useCallback(async () => {
-    if (!destinationFrom.decimals || !destinationFrom.address || !destinationFrom.chainId) return;
-    const tx = await approve(
-      destinationFrom.address as `0x${string}`,
-      import.meta.env.VITE_ROUTER_CONTRACT,
-      destinationFrom.chainId,
-      BigInt(Number(payAmount) * 10 ** destinationFrom.decimals).toString(),
-      setIsPending,
-      addTransaction,
-    );
-    if (tx) setLocalTx(tx);
+    try {
+      if (!destinationFrom.decimals || !destinationFrom.address || !destinationFrom.chainId) return;
+      const tx = await approve(
+        destinationFrom.address as `0x${string}`,
+        import.meta.env.VITE_ROUTER_CONTRACT,
+        destinationFrom.chainId,
+        BigInt(Number(payAmount) * 10 ** destinationFrom.decimals).toString(),
+        setIsPending,
+        addTransaction,
+      );
+      if (tx) setLocalTx(tx);
+    } catch (error) {
+      errorHandler(error)
+    }
   }, [destinationFrom.decimals, destinationFrom.address, destinationFrom.chainId, approve, payAmount]);
 
   const switchDestinations = useCallback(async () => {

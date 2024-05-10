@@ -7,6 +7,10 @@ const notificationTitles: Record<string, string> = {
   pending: "Pending",
 };
 
+const notificationMessages: Record<string, string> = {
+	somethingWrong: 'Something went wrong'
+}
+
 const success = (title: string, message: string) =>
   notifications.show({
     title: title,
@@ -46,4 +50,4 @@ const notification = {
   error,
 };
 
-export { notification, notificationTitles };
+export { notification, notificationTitles, notificationMessages };

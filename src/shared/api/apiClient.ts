@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import { notification, notificationMessages, notificationTitles } from '../helpers/notificationMessages';
 // import Cookie from 'js-cookie';
 
 // import { logOutUser } from '@/entities/User';
@@ -42,24 +43,21 @@ export const apiClient = axios.create({
 //   return config;
 // });
 
-// export const errorHandler = (error: unknown) => {
-//   if (error instanceof Error && 'isAxiosError' in error) {
-//     const axiosError = error as AxiosError<ErrorWithStatusCode>;
-//     if (axiosError?.response?.data.statusCode === 401) {
-//       logOutUser();
-//     }
-//     if (axiosError?.response?.data?.message) {
-//       notification.error(
-//         notificationTitles.error,
-//         axiosError.response.data.message,
-//       );
-//     } else {
-//       notification.error(notificationTitles.error, axiosError.toString());
-//     }
-//   } else {
-//     notification.error(
-//       notificationTitles.error,
-//       notificationMessages.somethingWentWrong,
-//     );
-//   }
-// };
+export const errorHandler = (error: unknown) => {
+  if (error instanceof Error && 'isAxiosError' in error) {
+    const axiosError = error as AxiosError<ErrorWithStatusCode>;
+    if (axiosError?.response?.data?.message) {
+      notification.error(
+        notificationTitles.error,
+        axiosError.response.data.message,
+      );
+    } else {
+      notification.error(notificationTitles.error, axiosError.toString());
+    }
+  } else {
+    notification.error(
+      notificationTitles.error,
+      notificationMessages.somethingWrong,
+    );
+  }
+};
