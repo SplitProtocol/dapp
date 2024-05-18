@@ -19,6 +19,7 @@ export type TokenGetOutAmountState = {
   toToken: string;
   volume: string;
   destChainID: number;
+  fromChainID: number;
 }
 
 export type TokenGetOutAmountBody = {
@@ -28,13 +29,14 @@ export type TokenGetOutAmountBody = {
   destChainID: number;
 }
 
-export type SwapBody = {
+export type SwapState = {
   fromToken: string;
   toToken: string;
   volume: string;
   trader: string;
   unsignedHash: string;
   signedHash: string;
+  fromChainID: number;
   destChainID: number;
   partner?: string;
   partnerShare?: string;
@@ -44,6 +46,8 @@ export type SwapBody = {
   takeProfit?: string;
   trailingStopLoss?: string;
 }
+
+export type SwapBody = Omit<SwapState, 'fromChainID'>
 
 export type SwapResponse = {
   txhash: string;

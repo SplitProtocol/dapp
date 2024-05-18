@@ -8,6 +8,7 @@ import { ethers } from "ethers";
 import type {
   SwapBody,
   SwapResponse,
+  SwapState,
   TokenGetOutAmountBody,
   TokenGetOutAmountState,
 } from "../model/types";
@@ -19,14 +20,13 @@ export const tokenGetOutAmountQueryKey = "tokenGetOutAmount";
 export const fetchTokenGetOutAmount = async (
   state: TokenGetOutAmountState
 ): Promise<Record<string, string> | null> => {
-  const { volume, fromDecimals, destChainID, ...restState } = state;
+  const { volume, fromDecimals, fromChainID, ...restState } = state;
   const body: TokenGetOutAmountBody = {
     ...restState,
-    destChainID,
     volume: ethers.parseUnits(volume, fromDecimals).toString(),
   };
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/${destChainID}/getOut`,
+    `${import.meta.env.VITE_API_URL}/${fromChainID}/getOut`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -42,10 +42,13 @@ export const fetchTokenGetOutAmount = async (
   return result;
 };
 
-export const swapTokens = async (body: SwapBody) => {
-  const { destChainID } = body;
+export const swapTokens = async (state: SwapState) => {
+  const { fromChainID, ...restState } = state;
+  const body: SwapBody = {
+    ...restState
+  }
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/${destChainID}/swap`,
+    `${import.meta.env.VITE_API_URL}/${fromChainID}/swap`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +60,7 @@ export const swapTokens = async (body: SwapBody) => {
   );
 
   const result = await response.json();
-  const mergedResult = { ...result, destChainID };
+  const mergedResult = { ...result, fromChainID };
   return mergedResult;
 };
 
@@ -92,7 +95,7 @@ export const useFetchTokenGetOutAmount = (body: TokenGetOutAmountState) => {
 export const useSwapTokensApi = (): UseMutationResult<
   SwapResponse,
   unknown,
-  SwapBody
+  SwapState
 > => {
   return useMutation({
     mutationFn: (state) => swapTokens(state),
