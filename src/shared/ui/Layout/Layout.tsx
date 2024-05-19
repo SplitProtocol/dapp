@@ -7,7 +7,7 @@ type LayoutProps = {
   isOnePager?: boolean;
 };
 
-const layoutMainClassName = "flex flex-col min-h-screen w-full items-center";
+const layoutMainClassName = "flex flex-col min-h-screen w-full items-center pt-[8rem]";
 
 export const Layout: FC<LayoutProps> = (props) => {
   const { headerSlot, isOnePager = false } = props;

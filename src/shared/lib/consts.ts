@@ -6,14 +6,14 @@ export type NavLinkTypes = {
 };
 
 export const navLinks: NavLinkTypes[] = [
-	{
-		label: 'Portfolio',
-		path: navigationRoutes.portfolio,
-	},
-  {
-		label: 'Staking SPLX',
-		path: navigationRoutes.staking,
-	},
+	// {
+	// 	label: 'Portfolio',
+	// 	path: navigationRoutes.portfolio,
+	// },
+  // {
+	// 	label: 'Staking SPLX',
+	// 	path: navigationRoutes.staking,
+	// },
   {
 		label: 'Trade',
 		path: navigationRoutes.trade,

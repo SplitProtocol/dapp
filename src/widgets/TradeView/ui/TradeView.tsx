@@ -4,17 +4,20 @@ import { Switch, Tabs } from "@mantine/core";
 import { useState } from "react";
 import { useAccount } from "wagmi";
 import { TradeViewActiveTab } from "../model/types";
+import { clsxMerge } from "@/shared/lib/clsxMerge";
+import { useMedia } from "react-use";
 
 export const TradeView = () => {
   const { isExpertMode, setIsExpertMode } = useTokenChartStore();
+  const isMobile = useMedia("only screen and (max-width: 768px)", false);
   const { chainId } = useAccount();
   const [activeTab, setActiveTab] = useState<string | null>(
     TradeViewActiveTab.SWAP
   );
   return (
-    <div className="flex flex-row w-full justify-center items-stretch gap-4">
+    <div className="flex relative flex-row w-full justify-center items-stretch gap-4">
       {isExpertMode && chainId && (
-        <div className="flex flex-col w-full rounded-xl bg-gray-800 px-8 py-8 h-auto">
+        <div className={clsxMerge("flex flex-col w-full rounded-xl bg-gray-800 px-8 py-8 h-auto", isMobile && isExpertMode && "z-20 absolute top-[3rem] h-full")}>
           <TokenChart chain={chainId} />
         </div>
       )}
@@ -37,16 +40,16 @@ export const TradeView = () => {
         >
           <Tabs.List>
             <Tabs.Tab value={TradeViewActiveTab.SWAP}>Swap</Tabs.Tab>
-            <Tabs.Tab value={TradeViewActiveTab.LIMIT}>Limit</Tabs.Tab>
+            {/* <Tabs.Tab value={TradeViewActiveTab.LIMIT}>Limit</Tabs.Tab> */}
           </Tabs.List>
 
           <Tabs.Panel value={TradeViewActiveTab.SWAP} pt="xs">
             <SwapForm />
           </Tabs.Panel>
 
-          <Tabs.Panel value={TradeViewActiveTab.LIMIT} pt="xs">
+          {/* <Tabs.Panel value={TradeViewActiveTab.LIMIT} pt="xs">
             Limit
-          </Tabs.Panel>
+          </Tabs.Panel> */}
         </Tabs>
       </div>
     </div>

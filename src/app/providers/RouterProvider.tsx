@@ -1,4 +1,4 @@
-import { PortfolioPage } from '@/pages/PortfolioPage';
+// import { PortfolioPage } from '@/pages/PortfolioPage';
 import { TradePage } from '@/pages/TradePage';
 import { navigationRoutes } from '@/shared/routes/navigationRoutes';
 import { Layout } from '@/shared/ui';
@@ -12,10 +12,10 @@ export const RouterProvider = () => {
 				<Layout headerSlot={<Header />} />
 			),
 			children: [
-				{
-					path: navigationRoutes.portfolio,
-					element: <PortfolioPage />,
-				},
+				// {
+				// 	path: navigationRoutes.portfolio,
+				// 	element: <PortfolioPage />,
+				// },
 				{
 					path: navigationRoutes.trade,
 					element: <TradePage />
@@ -23,7 +23,7 @@ export const RouterProvider = () => {
 				{
 					path: '*',
 					element: (
-						<Navigate to={navigationRoutes.portfolio} replace />
+						<Navigate to={navigationRoutes.trade} replace />
 					),
 				},
 			],
