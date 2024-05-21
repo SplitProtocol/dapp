@@ -13,7 +13,7 @@ import {
   abiERC20,
 } from "@/entities/Token";
 import { useDebounce } from "@/shared/lib/useDebounce";
-import { useFetchTokenGetOutAmount, useSwapTokensApi } from "../api/swapApi";
+import { useFetchTokenGetOutAmount, useSwapTokensApi, useSwapTokensCrossApi } from "../api/swapApi";
 import { ethers } from "ethers";
 import { useWeb3 } from "@/shared/lib/useWeb3";
 import {
@@ -55,9 +55,11 @@ export const useSwapForm = () => {
 
   const {
     mutateAsync,
-    isPending: isPendingSwap,
-    isSuccess: isSuccessSwap,
+    isPending: isPendingSwapOnChain,
+    isSuccess: isSuccessSwapOnChain,
   } = useSwapTokensApi();
+
+  const { mutateAsync: mutateAsyncCross, isPending: isPendingCross, isSuccess: isSuccessCross } = useSwapTokensCrossApi();
 
   const { data: allowance } = useReadContract({
     abi: abiERC20,
@@ -152,6 +154,9 @@ export const useSwapForm = () => {
         destChainID: destinationTo.chainId,
         fromChainID: destinationFrom.chainId,
       };
+      if (destinationTo.chainId !== destinationFrom.chainId) {
+        return await mutateAsyncCross(state);
+      }
       await mutateAsync(state);
       console.log(singMessages);
     } catch (error) {
@@ -165,6 +170,7 @@ export const useSwapForm = () => {
     payAmount,
     memoizedGetOut,
     signMessage,
+    mutateAsyncCross,
   ]);
 
   const handleApprove = useCallback(async () => {
@@ -253,13 +259,13 @@ export const useSwapForm = () => {
   }, [destinationFrom, destinationTo, setSymbols]);
 
   useEffect(() => {
-    if (isSuccessSwap) {
+    if (isSuccessCross || isSuccessSwapOnChain) {
       notification.success(
         notificationTitles.pending,
         `Transaction successfully created`
       );
     }
-  }, [isSuccessSwap]);
+  }, [isSuccessSwapOnChain, isSuccessCross]);
 
   useEffect(() => {
     if (transactions.length) {
@@ -270,6 +276,8 @@ export const useSwapForm = () => {
       });
     }
   }, [transactions, localTx]);
+
+  const isPendingSwap = isPendingSwapOnChain || isPendingCross
 
   return {
     activeScreen,

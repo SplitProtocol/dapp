@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   UseMutationResult,
   useMutation,
@@ -7,6 +8,7 @@ import {
 import { ethers } from "ethers";
 import type {
   SwapBody,
+  SwapCrossResponseFromChain,
   SwapResponse,
   SwapState,
   TokenGetOutAmountBody,
@@ -14,6 +16,7 @@ import type {
 } from "../model/types";
 import { useEffect } from "react";
 import { addTransaction } from "@/entities/Transaction";
+import { useSendTransaction } from "wagmi";
 
 export const tokenGetOutAmountQueryKey = "tokenGetOutAmount";
 
@@ -64,6 +67,24 @@ export const swapTokens = async (state: SwapState) => {
   return mergedResult;
 };
 
+export const swapTokenCross = async (state: SwapState) => {
+  const { fromChainID, destChainID, fromToken, toToken, trader, volume } = state;
+  const response = await fetch(
+    `https://li.quest/v1/quote?fromChain=${fromChainID}&toChain=${destChainID}&fromToken=${fromToken}&toToken=${toToken}&fromAddress=${trader}&toAddress=${trader}&fromAmount=${volume}&order=RECOMMENDED`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      method: "GET" as const,
+    }
+  );
+
+  const result = await response.json();
+  const mergedResult = { ...result, fromChainID };
+  return mergedResult;
+};
+
 export const useFetchTokenGetOutAmount = (body: TokenGetOutAmountState) => {
   const queryClient = useQueryClient();
   const { volume, fromToken, toToken, destChainID } = body;
@@ -105,6 +126,27 @@ export const useSwapTokensApi = (): UseMutationResult<
         txHash: data.txhash,
         isCompleted: false,
         chainId: data.destChainID,
+      });
+    },
+  });
+};
+
+export const useSwapTokensCrossApi = (): UseMutationResult<
+  SwapCrossResponseFromChain,
+  unknown,
+  SwapState
+> => {
+  const { data: hash, sendTransactionAsync } = useSendTransaction()
+
+  return useMutation({
+    mutationFn: (state) => swapTokenCross(state),
+    onSuccess: async (data: SwapCrossResponseFromChain) => {
+      const { transactionRequest, fromChainID } = data
+      await sendTransactionAsync({ ...transactionRequest })
+      addTransaction({
+        txHash: hash as string,
+        isCompleted: false,
+        chainId: fromChainID,
       });
     },
   });
