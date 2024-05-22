@@ -119,7 +119,9 @@ export const useSwapForm = () => {
 
   const memoizedGetOut = useMemo(() => {
     if (getAmount && destinationTo.decimals) {
-      return ethers.formatEther(getAmount.out);
+      const amount = ethers.formatEther(getAmount.out);
+      const formattedAmount = parseFloat(amount).toFixed(8);
+      return formattedAmount;
     } else {
       return "0";
     }
