@@ -27,7 +27,7 @@ export const TradeView = () => {
           checked={isExpertMode}
           onChange={(event) => setIsExpertMode(event.currentTarget.checked)}
           color="#F29212"
-          classNames={{ label: "text-white" }}
+          classNames={{ label: "text-white", track: 'bg-[rgb(18,18,18)] border-[rgb(18,18,18)]', thumb: 'bg-primary border-primary' }}
         />}
         <Tabs
           color="#F29212"

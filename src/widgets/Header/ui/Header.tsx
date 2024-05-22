@@ -9,7 +9,7 @@ import { useMedia } from "react-use";
 export const Header = () => {
   const isMobile = useMedia("only screen and (max-width: 768px)", false);
   return (
-    <header className="flex flex-col fixed top-0 left-0 items-center w-full py-4 px-4 z-[100] bg-[#0A0A0A]">
+    <header className="flex flex-col fixed lg:relative top-0 left-0 items-center w-full py-4 px-4 z-[100] bg-[#0A0A0A]">
       <div className="flex flex-row w-full justify-between items-center max-w-[81.25rem]">
         <Link to={navigationRoutes.home}>
           <Image
