@@ -166,7 +166,7 @@ export type SwapCrossResponse = {
   estimate: Estimate;
   includedSteps: IncludedStep[];
   integrator: string;
-  transactionRequest: TransactionRequest;
+  tx: TransactionRequest;
 }
 
 export type SwapCrossResponseFromChain = SwapCrossResponse & {

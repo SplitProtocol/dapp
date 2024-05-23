@@ -142,9 +142,9 @@ export const useSwapTokensCrossApi = (): UseMutationResult<
     // mutationFn: (state) => swapTokenCross(state),
     mutationFn: (state) => swapTokens(state),
     onSuccess: async (data: SwapCrossResponseFromChain) => {
-      const { transactionRequest, fromChainID } = data
+      const { tx, fromChainID } = data
       console.log(data, hash);
-      await sendTransactionAsync({ ...transactionRequest })
+      await sendTransactionAsync({ ...tx })
       addTransaction({
         txHash: hash as string,
         isCompleted: false,
