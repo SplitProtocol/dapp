@@ -72,6 +72,18 @@ export const useSwapForm = () => {
     },
   });
 
+  const { data: toDecimals } = useReadContract({
+    abi: abiERC20,
+    address: (destinationTo.address as `0x${string}`) || "0x",
+    functionName: "decimals",
+    chainId: destinationTo.chainId as number | undefined,
+    query: {
+      enabled: !!address && !!destinationFrom.address && !!destinationTo.chainId,
+    },
+  });
+
+  console.log(toDecimals);
+
   const { data: pricesTokenFrom, isLoading: isLoadingPriceFrom } =
     useFetchTokenPriceByAddresses(
       {
@@ -118,14 +130,14 @@ export const useSwapForm = () => {
     setActiveScreen(destination);
 
   const memoizedGetOut = useMemo(() => {
-    if (getAmount && destinationTo.decimals) {
-      const amount = ethers.formatEther(getAmount.out);
+    if (getAmount && destinationTo.decimals && typeof toDecimals === 'number') {
+      const amount = ethers.formatUnits(getAmount.out, toDecimals);
       const formattedAmount = parseFloat(amount).toFixed(8);
       return formattedAmount;
     } else {
       return "0";
     }
-  }, [getAmount, destinationTo.decimals]);
+  }, [getAmount, destinationTo.decimals, toDecimals]);
 
   const handleSwap = useCallback(async () => {
     try {
