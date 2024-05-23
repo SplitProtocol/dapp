@@ -13,7 +13,11 @@ import {
   abiERC20,
 } from "@/entities/Token";
 import { useDebounce } from "@/shared/lib/useDebounce";
-import { useFetchTokenGetOutAmount, useSwapTokensApi, useSwapTokensCrossApi } from "../api/swapApi";
+import {
+  useFetchTokenGetOutAmount,
+  useSwapTokensApi,
+  useSwapTokensCrossApi,
+} from "../api/swapApi";
 import { ethers } from "ethers";
 import { useWeb3 } from "@/shared/lib/useWeb3";
 import {
@@ -59,13 +63,22 @@ export const useSwapForm = () => {
     isSuccess: isSuccessSwapOnChain,
   } = useSwapTokensApi();
 
-  const { mutateAsync: mutateAsyncCross, isPending: isPendingCross, isSuccess: isSuccessCross } = useSwapTokensCrossApi();
+  const {
+    mutateAsync: mutateAsyncCross,
+    isPending: isPendingCross,
+    isSuccess: isSuccessCross,
+  } = useSwapTokensCrossApi();
 
   const { data: allowance } = useReadContract({
     abi: abiERC20,
     address: (destinationFrom.address as `0x${string}`) || "0x",
     functionName: "allowance",
-    args: [address, import.meta.env.VITE_ROUTER_CONTRACT],
+    args: [
+      address,
+      destinationFrom.chainId === destinationTo.chainId
+        ? import.meta.env.VITE_ROUTER_CONTRACT
+        : import.meta.env.VITE_LIFI_ROUTER,
+    ],
     chainId,
     query: {
       enabled: !!address && !!destinationFrom.address,
@@ -78,7 +91,8 @@ export const useSwapForm = () => {
     functionName: "decimals",
     chainId: destinationTo.chainId as number | undefined,
     query: {
-      enabled: !!address && !!destinationFrom.address && !!destinationTo.chainId,
+      enabled:
+        !!address && !!destinationFrom.address && !!destinationTo.chainId,
     },
   });
 
@@ -130,7 +144,7 @@ export const useSwapForm = () => {
     setActiveScreen(destination);
 
   const memoizedGetOut = useMemo(() => {
-    if (getAmount && destinationTo.decimals && typeof toDecimals === 'number') {
+    if (getAmount && destinationTo.decimals && typeof toDecimals === "number") {
       const amount = ethers.formatUnits(getAmount.out, toDecimals);
       const formattedAmount = parseFloat(amount).toFixed(8);
       return formattedAmount;
@@ -192,12 +206,15 @@ export const useSwapForm = () => {
       if (
         !destinationFrom.decimals ||
         !destinationFrom.address ||
-        !destinationFrom.chainId
+        !destinationFrom.chainId ||
+        !destinationTo.chainId
       )
         return;
       const tx = await approve(
         destinationFrom.address as `0x${string}`,
-        import.meta.env.VITE_ROUTER_CONTRACT,
+        destinationFrom.chainId === destinationTo.chainId
+        ? import.meta.env.VITE_ROUTER_CONTRACT
+        : import.meta.env.VITE_LIFI_ROUTER,
         destinationFrom.chainId,
         BigInt(Number(payAmount) * 10 ** destinationFrom.decimals).toString(),
         setIsPending,
@@ -211,6 +228,7 @@ export const useSwapForm = () => {
     destinationFrom.decimals,
     destinationFrom.address,
     destinationFrom.chainId,
+    destinationTo.chainId,
     approve,
     payAmount,
   ]);
@@ -291,7 +309,7 @@ export const useSwapForm = () => {
     }
   }, [transactions, localTx]);
 
-  const isPendingSwap = isPendingSwapOnChain || isPendingCross
+  const isPendingSwap = isPendingSwapOnChain || isPendingCross;
 
   return {
     activeScreen,
