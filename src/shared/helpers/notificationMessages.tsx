@@ -8,7 +8,8 @@ const notificationTitles: Record<string, string> = {
 };
 
 const notificationMessages: Record<string, string> = {
-	somethingWrong: 'Something went wrong'
+	somethingWrong: 'Something went wrong',
+  referralLinkWasCopySoccess: 'Your referral link has been successfully copied'
 }
 
 const success = (title: string, message: string) =>

@@ -5,9 +5,11 @@ import { NavBar } from "@/widgets/NavBar";
 import { Image, Menu, Burger } from "@mantine/core";
 import { Link } from "react-router-dom";
 import { useMedia } from "react-use";
+import { useAccount } from "wagmi";
 
 export const Header = () => {
   const isMobile = useMedia("only screen and (max-width: 768px)", false);
+  const { chainId } = useAccount();
   return (
     <header className="flex flex-col fixed lg:relative top-0 left-0 items-center w-full py-4 px-4 z-[100] bg-[#0A0A0A]">
       <div className="flex flex-row w-full justify-between items-center max-w-[81.25rem]">
@@ -25,7 +27,7 @@ export const Header = () => {
         </Link>
         <NavBar />
         <div className="flex flex-row items-center gap-x-3">
-          <NetworkButton />
+          {chainId && <NetworkButton />}
           <ConnectButton />
           {isMobile && (
             <Menu

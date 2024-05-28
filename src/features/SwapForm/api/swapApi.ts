@@ -121,7 +121,6 @@ export const useSwapTokensApi = (): UseMutationResult<
   return useMutation({
     mutationFn: (state) => swapTokens(state),
     onSuccess: (data: SwapResponse) => {
-      console.log(data);
       addTransaction({
         txHash: data.txhash,
         isCompleted: false,
