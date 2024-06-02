@@ -1,7 +1,7 @@
 import { createWeb3Modal } from "@web3modal/wagmi/react";
 
 import { http, createConfig, WagmiProvider } from "wagmi";
-import { arbitrum, avalanche, bsc, fantom, mainnet, polygon } from "wagmi/chains";
+import { arbitrum, avalanche, bsc, fantom, mainnet, polygon, base } from "wagmi/chains";
 import { walletConnect, injected, coinbaseWallet } from "wagmi/connectors";
 
 import { PropsWithChildren, FC } from "react";
@@ -18,7 +18,7 @@ const metadata = {
 };
 
 const config = createConfig({
-  chains: [mainnet, arbitrum, avalanche, fantom, bsc, polygon],
+  chains: [mainnet, arbitrum, avalanche, fantom, bsc, polygon, base],
   transports: {
     [mainnet.id]: http(),
     [arbitrum.id]: http(),
@@ -26,6 +26,7 @@ const config = createConfig({
     [fantom.id]: http(),
     [bsc.id]: http(),
     [polygon.id]: http(),
+    [base.id]: http(),
   },
   connectors: [
     walletConnect({ projectId, metadata, showQrModal: false }),

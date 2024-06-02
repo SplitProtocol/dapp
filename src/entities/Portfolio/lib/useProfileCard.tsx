@@ -2,6 +2,7 @@ import { useAccount, createConfig, http } from "wagmi";
 import {
   arbitrum,
   avalanche,
+  base,
   bsc,
   fantom,
   mainnet,
@@ -12,7 +13,7 @@ import { useCallback, useEffect, useState } from "react";
 import { formatEtherValue } from "@/shared/lib/utils";
 
 const config = createConfig({
-  chains: [mainnet, arbitrum, avalanche, fantom, bsc, polygon],
+  chains: [mainnet, arbitrum, avalanche, fantom, bsc, polygon, base],
   transports: {
     [mainnet.id]: http(),
     [arbitrum.id]: http(),
@@ -20,6 +21,7 @@ const config = createConfig({
     [fantom.id]: http(),
     [bsc.id]: http(),
     [polygon.id]: http(),
+    [base.id]: http(),
   },
 });
 
