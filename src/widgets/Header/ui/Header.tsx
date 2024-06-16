@@ -11,12 +11,14 @@ import { useAccount, useAccountEffect } from "wagmi";
 export const Header = () => {
   const isMobile = useMedia("only screen and (max-width: 768px)", false);
   const { chainId } = useAccount();
-  const { handleSingMessage } = useAuthorizationByReferralCode();
+  const { inviter, handleSingMessage } = useAuthorizationByReferralCode();
 
   useAccountEffect({
     onConnect(data) {
       console.log("Connected!", data);
-      handleSingMessage(data.address, data.chainId);
+      if (inviter) {
+        handleSingMessage(data.address, data.chainId);
+      }
     },
     onDisconnect() {
       console.log("Disconnected!");

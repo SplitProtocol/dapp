@@ -29,8 +29,8 @@ export const useLoginByReferralCodeApi = (): UseMutationResult<
   return useMutation({
     mutationFn: (state) => loginByReferralCode(state),
     onSuccess: (data: AuthorizationByReferralResponse) => {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('authSuccess', String(data.authSuccess))
+      if (typeof window !== 'undefined' && data.authSuccess) {
+        localStorage.removeItem('inviter');
       }
     },
   });

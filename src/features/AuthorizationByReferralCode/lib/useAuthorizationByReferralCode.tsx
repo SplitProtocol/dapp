@@ -10,7 +10,6 @@ export const useAuthorizationByReferralCode = () => {
   const { signMessage } = useWeb3();
 
   const inviter = typeof window !== 'undefined' && localStorage.getItem(import.meta.env.VITE_INVITER_KEY);
-  const authSuccess = typeof window !== 'undefined' && localStorage.getItem('authSuccess');
 
   const { mutateAsync, isPending: isPendingLogin } = useLoginByReferralCodeApi();
 
@@ -42,7 +41,7 @@ export const useAuthorizationByReferralCode = () => {
   return {
     isPending,
     isPendingLogin,
-    authSuccess,
+    inviter,
     handleSingMessage,
   }
 }
