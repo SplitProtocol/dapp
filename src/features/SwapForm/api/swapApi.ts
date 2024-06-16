@@ -121,11 +121,13 @@ export const useSwapTokensApi = (): UseMutationResult<
   return useMutation({
     mutationFn: (state) => swapTokens(state),
     onSuccess: (data: SwapResponse) => {
-      addTransaction({
-        txHash: data.txhash,
-        isCompleted: false,
-        chainId: data.destChainID,
-      });
+      if (data.txhash) {
+        addTransaction({
+          txHash: data.txhash,
+          isCompleted: false,
+          chainId: data.destChainID,
+        });
+      }
     },
   });
 };
@@ -142,11 +144,13 @@ export const useSwapTokensCrossApi = (): UseMutationResult<
     onSuccess: async (data: SwapCrossResponseFromChain) => {
       const { tx, fromChainID } = data
       await sendTransactionAsync({ ...tx })
-      addTransaction({
-        txHash: hash as string,
-        isCompleted: false,
-        chainId: fromChainID,
-      });
+      if (hash) {
+        addTransaction({
+          txHash: hash as string,
+          isCompleted: false,
+          chainId: fromChainID,
+        });
+      }
     },
   });
 };

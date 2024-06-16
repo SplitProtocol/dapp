@@ -26,8 +26,8 @@ export const SwapDestination: FC<SwapDestinationProps> = (props) => {
     onBack,
   } = props;
   const {
-    tokenList,
     search,
+    memoizedTokenList,
     isLoadingTokens,
     searchResults,
     handleInputChange,
@@ -57,7 +57,9 @@ export const SwapDestination: FC<SwapDestinationProps> = (props) => {
           leftSection={<IconSearch size={16} />}
           sizeInput="large"
           value={search}
-          onChange={(event) => handleInputChange(event.currentTarget.value)}
+          onChange={(event) =>
+            handleInputChange(event.currentTarget.value)
+          }
         />
       </div>
       <div className="flex flex-col w-full max-h-[18.75rem] overflow-auto">
@@ -67,8 +69,7 @@ export const SwapDestination: FC<SwapDestinationProps> = (props) => {
           </div>
         )}
         {!isLoadingTokens &&
-          searchResults.length > 0 &&
-          searchResults.map((token) => (
+          searchResults?.map((token) => (
             <TokenListCard
               key={token.address}
               token={token}
@@ -76,14 +77,22 @@ export const SwapDestination: FC<SwapDestinationProps> = (props) => {
             />
           ))}
         {!isLoadingTokens &&
+          !search.length &&
           !searchResults.length &&
-          tokenList?.map((token) => (
+          memoizedTokenList?.map((token) => (
             <TokenListCard
               key={token.address}
               token={token}
               onSetDestination={handleSetDestination}
             />
           ))}
+        {!isLoadingTokens && !searchResults.length && search.length && (
+          <div className="flex flex-col w-full items-center min-h-[10rem] pt-6">
+            <div className="text-xs text-center font-body text-white/50">
+              <mark className="flex truncate bg-transparent text-white text-center">{search}</mark> not found
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

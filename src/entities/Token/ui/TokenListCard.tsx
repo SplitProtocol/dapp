@@ -6,6 +6,7 @@ import {
 } from "@/entities/Network";
 import { convertAddressWallet } from "@/shared/lib/utils";
 import { IconExternalLink } from "@tabler/icons-react";
+import DefaultTokenLogo from "@/assets/default-token-logo.jpg";
 
 type TokenListCardProps = {
   token: TokenListItem;
@@ -19,10 +20,11 @@ export const TokenListCard: FC<TokenListCardProps> = (props) => {
     const destination: Token = {
       symbol: token.symbol,
       decimals: token.decimals,
-      logoURI: token.logoURI || "",
+      logoURI: token.logoURI || DefaultTokenLogo,
       name: token.name,
       address: token.address,
       chainId: token.chainId,
+      priceUSD: token.priceUSD,
     };
     onSetDestination(destination);
   };
@@ -34,7 +36,7 @@ export const TokenListCard: FC<TokenListCardProps> = (props) => {
     >
       <div className="flex flex-col w-[2.5rem] h-[2.5rem] relative shrink-0">
         <img
-          src={token.logoURI}
+          src={token.logoURI || DefaultTokenLogo}
           alt={token.name}
           className="rounded-full w-full h-full"
         />
@@ -58,7 +60,7 @@ export const TokenListCard: FC<TokenListCardProps> = (props) => {
                   networkScannerLink[
                     token.chainId as keyof typeof networkScannerLink
                   ]
-                }/${token.address}`}
+                }/address/${token.address}`}
                 target="_blank"
                 className="opacity-50 hover:opacity-100 tansition-all"
               >

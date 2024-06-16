@@ -1,3 +1,4 @@
+import { useAuthorizationByReferralCode } from "@/features/AuthorizationByReferralCode";
 import { ConnectButton } from "@/features/ConnectButton";
 import { NetworkButton } from "@/features/NetworkButton";
 import { navigationRoutes } from "@/shared/routes/navigationRoutes";
@@ -5,11 +6,24 @@ import { NavBar } from "@/widgets/NavBar";
 import { Image, Menu, Burger } from "@mantine/core";
 import { Link } from "react-router-dom";
 import { useMedia } from "react-use";
-import { useAccount } from "wagmi";
+import { useAccount, useAccountEffect } from "wagmi";
 
 export const Header = () => {
   const isMobile = useMedia("only screen and (max-width: 768px)", false);
   const { chainId } = useAccount();
+  const { handleSingMessage } = useAuthorizationByReferralCode();
+
+  useAccountEffect({
+    onConnect(data) {
+      console.log("Connected!", data);
+      handleSingMessage(data.address, data.chainId);
+    },
+    onDisconnect() {
+      console.log("Disconnected!");
+      typeof window !== "undefined" &&
+        localStorage.setItem("authSuccess", "false");
+    },
+  });
   return (
     <header className="flex flex-col fixed lg:relative top-0 left-0 items-center w-full py-4 px-4 z-[100] bg-[#0A0A0A]">
       <div className="flex flex-row w-full justify-between items-center max-w-[81.25rem]">
@@ -22,7 +36,7 @@ export const Header = () => {
           <Image
             src="/images/logo-mobile.webp"
             alt="Split"
-            className="md:hidden flex h-[3.375rem]"
+            className="md:hidden flex h-[3.375rem] w-[3.375rem] object-contain"
           />
         </Link>
         <NavBar />
@@ -37,7 +51,7 @@ export const Header = () => {
               classNames={{
                 dropdown: "bg-gray-800 border-none",
                 itemLabel: "text-white",
-                item: "hover:bg-white/5 bg-transparent"
+                item: "hover:bg-white/5 bg-transparent",
               }}
             >
               <Menu.Target>

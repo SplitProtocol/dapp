@@ -1,3 +1,5 @@
+import { TokenListItem } from "@/entities/Token";
+
 export enum SwapHeaderCaptions {
   HOME = "Exchange",
   FROM = "Exchange from",
@@ -11,6 +13,7 @@ export type SwapDestinationState = {
   logoURI: string | null;
   decimals: number | null;
   chainId: number | null;
+  priceUSD: string | null;
 };
 
 export type TokenGetOutAmountState = {
@@ -171,4 +174,13 @@ export type SwapCrossResponse = {
 
 export type SwapCrossResponseFromChain = SwapCrossResponse & {
   fromChainID: number;
+}
+
+export type ImportedTokensStoreState = {
+  importedTokens: TokenListItem[];
+}
+
+export type ImportedTokensStoreAction = {
+  addImportedToken: (token: TokenListItem) => void;
+  clearImportedTokens: () => void;
 }

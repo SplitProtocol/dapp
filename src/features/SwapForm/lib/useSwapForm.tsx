@@ -7,11 +7,7 @@ import {
 } from "../model/types";
 import { destinationStateDefault, slippageOptions } from "./consts";
 import { useAccount, useReadContract, useSwitchChain } from "wagmi";
-import {
-  useFetchTokenPriceByAddresses,
-  useTokenChartStore,
-  abiERC20,
-} from "@/entities/Token";
+import { useTokenChartStore, abiERC20 } from "@/entities/Token";
 import { useDebounce } from "@/shared/lib/useDebounce";
 import {
   useFetchTokenGetOutAmount,
@@ -98,23 +94,9 @@ export const useSwapForm = () => {
 
   console.log(toDecimals);
 
-  const { data: pricesTokenFrom, isLoading: isLoadingPriceFrom } =
-    useFetchTokenPriceByAddresses(
-      {
-        tokens: [destinationFrom.address],
-        currency: "USD",
-      },
-      chainId
-    );
+  const pricesTokenFrom = destinationFrom.priceUSD || 0;
 
-  const { data: pricesTokenTo, isLoading: isLoadingPriceTo } =
-    useFetchTokenPriceByAddresses(
-      {
-        tokens: [destinationTo.address],
-        currency: "USD",
-      },
-      destinationTo.chainId
-    );
+  const pricesTokenTo = destinationTo.priceUSD || 0;
 
   const memoizedGetOutAmount = useMemo(
     () => ({
@@ -213,8 +195,8 @@ export const useSwapForm = () => {
       const tx = await approve(
         destinationFrom.address as `0x${string}`,
         destinationFrom.chainId === destinationTo.chainId
-        ? import.meta.env.VITE_ROUTER_CONTRACT
-        : import.meta.env.VITE_LIFI_ROUTER,
+          ? import.meta.env.VITE_ROUTER_CONTRACT
+          : import.meta.env.VITE_LIFI_ROUTER,
         destinationFrom.chainId,
         BigInt(Number(payAmount) * 10 ** destinationFrom.decimals).toString(),
         setIsPending,
@@ -318,8 +300,6 @@ export const useSwapForm = () => {
     chainId,
     pricesTokenFrom,
     pricesTokenTo,
-    isLoadingPriceFrom,
-    isLoadingPriceTo,
     payAmount,
     slippage,
     memoizedGetOut,

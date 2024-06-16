@@ -5,6 +5,7 @@ export type Token = {
   logoURI: string;
   decimals: number;
   chainId: number;
+  priceUSD: string;
 };
 
 export type TokenListItem = {
@@ -14,8 +15,9 @@ export type TokenListItem = {
   address: string;
   decimals: number;
   logoURI?: string;
-  providers: string[];
-  tags: string[];
+  providers?: string[];
+  tags?: string[];
+  priceUSD: string;
 };
 
 export type TokenChartStoreState = {

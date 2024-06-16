@@ -14,11 +14,11 @@ export const convertAddressWallet = (address: string, length: number) => {
 export const formatEtherValue = (value?: BigNumberish, decimals?: number) => {
   if (typeof value === 'undefined') return '0';
   const formattedValue = ethers.formatUnits(value, decimals);
-
-  return formattedValue;
+  if (isNaN(Number(formattedValue))) return '0';
+  return Number(formattedValue).toFixed(8);
 };
 
-export const calculateTokenPrice = (token1PriceUSD?: number, token2PriceUSD?: number) => {
+export const calculateTokenPrice = (token1PriceUSD?: string | number, token2PriceUSD?: string | number) => {
   if (Number.isNaN(token1PriceUSD) || Number.isNaN(token2PriceUSD)) return "Error"
   if (typeof token1PriceUSD !== 'number' || typeof token2PriceUSD !== 'number' || token1PriceUSD <= 0 || token2PriceUSD <= 0) {
       return "Error";
@@ -50,3 +50,8 @@ export const calculateTokenGetAmount = (token1Amount: number, token1PriceUSD: nu
 
   return token2Amount;
 }
+
+export const isValidEthereumAddress = (address: string) => {
+  const regex = /^0x[a-fA-F0-9]{40}$/;
+  return regex.test(address);
+};

@@ -18,7 +18,7 @@ export const fetchTokenListByChainId = async (
     }
   );
   const result = await response.json();
-  const symbolsToMove = ["WETH", "USDT", "USDC", "DAI", "WBTC"];
+  const symbolsToMove = ["ETH", "BNB", "WETH", "USDT", "USDC", "DAI", "WBTC"];
   const objectArray: TokenListItem[] = Object.values(result);
   const tokens = sortPopularToken(objectArray, symbolsToMove);
   return tokens;

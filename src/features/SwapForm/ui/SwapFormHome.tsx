@@ -24,6 +24,7 @@ import { useAccount } from "wagmi";
 import { SlippageControl } from "@/features/SlippageControl";
 import { slippageOptions } from "../lib/consts";
 import { useConnectButton } from "@/features/ConnectButton";
+import { Nullable } from "@/shared/types/sharedTypes";
 
 type SwapFormHomeProps = {
   destinationFrom: SwapDestinationState;
@@ -34,8 +35,8 @@ type SwapFormHomeProps = {
   setSlippage: (value: string) => void;
   onApprove: () => void;
   isApproveAvailable: boolean;
-  priceFrom?: Record<string, string> | null;
-  priceTo?: Record<string, string> | null;
+  priceFrom?: Nullable<string | number>;
+  priceTo?: Nullable<string | number>;
   slippage: string;
   getAmount: string;
   payAmount: string;
@@ -86,7 +87,10 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
 
   const isDisplayedInputs = destinationFrom.address && destinationTo.address;
 
-  const isButtonDisabled = Number(payAmount) === 0 || !isApproveAvailable || isPending
+  const isButtonDisabled =
+    Number(payAmount) === 0 || !isApproveAvailable || isPending;
+
+  const isApproveButtonDisabled = !isDisplayedInputs || isPending || Number(payAmount) === 0;
 
   return (
     <div className="flex flex-col w-full gap-y-4">
@@ -207,12 +211,7 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
             sizeInput="small"
             value={payAmount}
             onChange={(value) => setPayAmount(value.toString())}
-            tokenPriceUSD={
-              priceFrom &&
-              Number(
-                priceFrom[destinationFrom.address as keyof typeof priceFrom]
-              )
-            }
+            tokenPriceUSD={priceFrom && Number(priceFrom)}
           />
           <InputAmount
             token={destinationTo}
@@ -228,10 +227,7 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
             //     priceFrom[destinationFrom.address as keyof typeof priceFrom]
             //   )
             // }
-            tokenPriceToUSD={
-              priceTo &&
-              Number(priceTo[destinationTo.address as keyof typeof priceTo])
-            }
+            tokenPriceToUSD={priceTo && Number(priceTo)}
           />
           <div className="flex flex-col w-full rounded-lg bg-[#1E1E1E]">
             <button
@@ -251,15 +247,13 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
                             destinationFrom.address as keyof typeof priceFrom
                           ]
                         ),
-                      priceTo &&
-                        Number(
-                          priceTo[destinationTo.address as keyof typeof priceTo]
-                        )
+                      priceTo && Number(priceTo)
                     )}{" "}
                   {destinationFrom.symbol}
                 </div>
                 <div className="flex flex-row gap-x-1 items-center text-xs text-white">
-                  Slippage Tolerance: <div className="text-primary">{slippage}%</div>
+                  Slippage Tolerance:{" "}
+                  <div className="text-primary">{slippage}%</div>
                 </div>
               </div>
 
@@ -293,13 +287,19 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
           </Button>
         )}
         {address && isApproveAvailable && (
-          <Button size="lg" color="base" fullWidth disabled={isButtonDisabled} onClick={onSwap}>
-            {isPending ? <Loader size='xs' color="white" /> : 'Swap'}
+          <Button
+            size="lg"
+            color="base"
+            fullWidth
+            disabled={isButtonDisabled}
+            onClick={onSwap}
+          >
+            {isPending ? <Loader size="xs" color="white" /> : "Swap"}
           </Button>
         )}
         {address && !isApproveAvailable && (
-          <Button size="lg" color="base" fullWidth onClick={onApprove}>
-            {isPending ? <Loader size='xs' color="white" /> : 'Approve'}
+          <Button size="lg" color="base" fullWidth onClick={onApprove} disabled={isApproveButtonDisabled}>
+            {isPending ? <Loader size="xs" color="white" /> : "Approve"}
           </Button>
         )}
       </div>

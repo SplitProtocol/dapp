@@ -76,3 +76,7 @@ button:focus-visible {
 div.advanced-chart-widget-container {
   height: 100%;
 }
+
+* {
+  box-sizing: border-box;
+}

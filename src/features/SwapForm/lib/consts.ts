@@ -1,4 +1,4 @@
-import { SwapDestinationState } from "../model/types";
+import { ImportedTokensStoreState, SwapDestinationState } from "../model/types";
 
 export const destinationStateDefault: SwapDestinationState = {
   symbol: null,
@@ -7,6 +7,7 @@ export const destinationStateDefault: SwapDestinationState = {
   logoURI: null,
   chainId: null,
   decimals: null,
+  priceUSD: null,
 }
 
 export const slippageOptions = [
@@ -23,3 +24,7 @@ export const slippageOptions = [
     label: '1.0%'
   }
 ]
+
+export const importedTokensStateDefault: ImportedTokensStoreState = {
+  importedTokens: [],
+}

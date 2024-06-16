@@ -1,14 +1,20 @@
-import { abiERC20 } from "@/entities/Token";
+import { TokenListItem, abiERC20 } from "@/entities/Token";
 import { keccak256, toUtf8Bytes } from "ethers";
 import { useWriteContract, useSignMessage } from "wagmi";
+import { readContract } from "@wagmi/core"
 import { useEthersProvider } from "./useEtherProvider";
 import { PendingTransaction } from "@/entities/Transaction";
-import { notification, notificationTitles } from "../helpers/notificationMessages";
+import {
+  notification,
+  notificationTitles,
+} from "../helpers/notificationMessages";
+import { wagmiConfig } from "../configs/wagmiConfig";
 
 export const useWeb3 = () => {
   const { signMessageAsync } = useSignMessage();
   const { writeContractAsync } = useWriteContract();
   const provider = useEthersProvider();
+
   return {
     approve: async (
       address: `0x${string}`,
@@ -56,14 +62,17 @@ export const useWeb3 = () => {
       updateTransaction: (txHash: string, isCompleted: boolean) => void
     ) => {
       // eslint-disable-next-line react-hooks/rules-of-hooks
-     
+
       try {
         if (provider) {
           const checkTx = await provider.getTransactionReceipt(txHash);
-          console.log(checkTx)
+          console.log(checkTx);
           if (checkTx && checkTx.status) {
             updateTransaction(txHash, true);
-            notification.success(notificationTitles.success, `Your transaction has been successfully completed! Tx:${txHash}`)
+            notification.success(
+              notificationTitles.success,
+              `Your transaction has been successfully completed! Tx:${txHash}`
+            );
             return true;
           } else {
             return false;
@@ -73,6 +82,22 @@ export const useWeb3 = () => {
       } catch (error) {
         console.log(error);
       }
+    },
+    getTokenInfo: async (address: `0x${string}`, chainId: number) => {
+      const name = await readContract(wagmiConfig, { address, abi: abiERC20, functionName: "name" }) as string
+      const symbol = await readContract(wagmiConfig, { address, abi: abiERC20, functionName: "symbol" }) as string;
+      const decimals = await readContract(wagmiConfig, { address, abi: abiERC20, functionName: "decimals" }) as number;
+
+      const result: TokenListItem = {
+        symbol,
+        name,
+        decimals,
+        logoURI: "",
+        chainId,
+        address,
+        priceUSD: "",
+      }
+      return result;
     },
   };
 };

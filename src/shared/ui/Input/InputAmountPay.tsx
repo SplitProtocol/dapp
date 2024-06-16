@@ -2,6 +2,7 @@ import { renderNewtworkLogoByChainId } from "@/entities/Network";
 import { SwapDestinationState } from "@/features/SwapForm/model/types";
 import { clsxMerge } from "@/shared/lib/clsxMerge";
 import { calculateTokenCost, formatEtherValue } from "@/shared/lib/utils";
+import { Nullable } from "@/shared/types/sharedTypes";
 import {
   type InputBaseProps,
   NumberInput as MantineNumberInput,
@@ -29,7 +30,7 @@ type NumberInputProps = InputBaseProps &
     isRequired?: boolean;
     sizeInput?: NumberInputSize;
     token: SwapDestinationState;
-    tokenPriceUSD?: number | null;
+    tokenPriceUSD?: Nullable<string | number>;
   };
 
 const inputWrapperClassName =

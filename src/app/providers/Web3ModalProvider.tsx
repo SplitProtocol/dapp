@@ -1,53 +1,22 @@
 import { createWeb3Modal } from "@web3modal/wagmi/react";
 
-import { http, createConfig, WagmiProvider } from "wagmi";
-import { arbitrum, avalanche, bsc, fantom, mainnet, polygon, base } from "wagmi/chains";
-import { walletConnect, injected, coinbaseWallet } from "wagmi/connectors";
+import { WagmiProvider } from "wagmi";
+import { wagmiConfig } from '@/shared/configs/wagmiConfig';
 
 import { PropsWithChildren, FC } from "react";
 
-// 1. Get projectId at https://cloud.walletconnect.com
+// Get projectId at https://cloud.walletconnect.com
 const projectId = import.meta.env.VITE_PROJECT_ID;
 
-// 2. Create wagmiConfig
-const metadata = {
-  name: "Test",
-  description: "Test Example",
-  url: "https://60ee-115-73-214-73.ngrok-free.app", // origin must match your domain & subdomain
-  icons: ["https://avatars.githubusercontent.com/u/37784886"],
-};
-
-const config = createConfig({
-  chains: [mainnet, arbitrum, avalanche, fantom, bsc, polygon, base],
-  transports: {
-    [mainnet.id]: http(),
-    [arbitrum.id]: http(),
-    [avalanche.id]: http(),
-    [fantom.id]: http(),
-    [bsc.id]: http(),
-    [polygon.id]: http(),
-    [base.id]: http(),
-  },
-  connectors: [
-    walletConnect({ projectId, metadata, showQrModal: false }),
-    injected({ shimDisconnect: true }),
-    coinbaseWallet({
-      appName: metadata.name,
-      appLogoUrl: metadata.icons[0],
-    }),
-  ],
-});
-
-// 3. Create modal
 createWeb3Modal({
-  wagmiConfig: config,
+  wagmiConfig,
   projectId,
-  enableAnalytics: true, // Optional - defaults to your Cloud configuration
-  enableOnramp: true, // Optional - false as default
+  enableAnalytics: true,
+  enableOnramp: true,
 });
 
 export const Web3ModalProvider: FC<PropsWithChildren<unknown>> = ({
   children,
 }) => {
-  return <WagmiProvider config={config}>{children}</WagmiProvider>;
+  return <WagmiProvider config={wagmiConfig}>{children}</WagmiProvider>;
 };

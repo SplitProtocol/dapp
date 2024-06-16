@@ -1,0 +1,1 @@
+export { useAuthorizationByReferralCode } from './lib/useAuthorizationByReferralCode'
