@@ -243,9 +243,7 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
                     calculateTokenPrice(
                       priceFrom &&
                         Number(
-                          priceFrom[
-                            destinationFrom.address as keyof typeof priceFrom
-                          ]
+                          priceFrom
                         ),
                       priceTo && Number(priceTo)
                     )}{" "}
