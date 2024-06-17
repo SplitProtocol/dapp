@@ -22,7 +22,6 @@ export const useAuthorizationByReferralCode = () => {
         `Login as ${address}. Inviter: ${inviter || 'none'}`,
         setIsPendingSign
       );
-      console.log(singMessages);
       if (!singMessages?.signedHash || !singMessages?.unsignedHash) return;
 
       const state: AuthorizationByReferralState = {
