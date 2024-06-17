@@ -121,7 +121,10 @@ export const useSwapForm = () => {
   const handleOpenDestination = (destination: SwapHeaderCaptions) =>
     setActiveScreen(destination);
 
+  console.log(toDecimals);
+
   const memoizedGetOut = useMemo(() => {
+    console.log(toDecimals);
     if (getAmount && destinationTo.decimals && typeof toDecimals === "number") {
       const amount = ethers.formatUnits(getAmount.out, toDecimals);
       const formattedAmount = parseFloat(amount).toFixed(8);
@@ -130,6 +133,8 @@ export const useSwapForm = () => {
       return "0";
     }
   }, [getAmount, destinationTo.decimals, toDecimals]);
+
+  console.log(memoizedGetOut, getAmount && destinationTo.decimals && typeof toDecimals === "number", typeof toDecimals);
 
   const memoizedPricesTokenFrom = useMemo(() => getAmount && getAmount.inUSD ? getAmount.inUSD : 0, [getAmount]);
 
