@@ -11,8 +11,8 @@ export const SwapForm = () => {
     destinationFrom,
     destinationTo,
     chainId,
-    pricesTokenFrom,
-    pricesTokenTo,
+    memoizedPricesTokenFrom,
+    memoizedPricesTokenTo,
     payAmount,
     memoizedGetOut,
     isApproveAvailable,
@@ -53,8 +53,8 @@ export const SwapForm = () => {
               onOpenDestinationTo={() =>
                 handleOpenDestination(SwapHeaderCaptions.TO)
               }
-              priceFrom={pricesTokenFrom}
-              priceTo={pricesTokenTo}
+              priceFrom={memoizedPricesTokenFrom}
+              priceTo={memoizedPricesTokenTo}
               payAmount={payAmount}
               setPayAmount={setPayAmount}
             />
@@ -101,8 +101,8 @@ export const SwapForm = () => {
               onOpenDestinationTo={() =>
                 handleOpenDestination(SwapHeaderCaptions.TO)
               }
-              priceFrom={pricesTokenFrom}
-              priceTo={pricesTokenTo}
+              priceFrom={memoizedPricesTokenFrom}
+              priceTo={memoizedPricesTokenTo}
               payAmount={payAmount}
               setPayAmount={setPayAmount}
             />
@@ -119,8 +119,8 @@ export const SwapForm = () => {
       isLoadingGetAmount,
       switchDestinations,
       memoizedGetOut,
-      pricesTokenFrom,
-      pricesTokenTo,
+      memoizedPricesTokenFrom,
+      memoizedPricesTokenTo,
       payAmount,
       setPayAmount,
       chainId,

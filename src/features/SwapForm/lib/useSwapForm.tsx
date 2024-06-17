@@ -94,10 +94,6 @@ export const useSwapForm = () => {
 
   console.log(toDecimals);
 
-  const pricesTokenFrom = destinationFrom.priceUSD || 0;
-
-  const pricesTokenTo = destinationTo.priceUSD || 0;
-
   const memoizedGetOutAmount = useMemo(
     () => ({
       fromToken: destinationFrom.address,
@@ -134,6 +130,10 @@ export const useSwapForm = () => {
       return "0";
     }
   }, [getAmount, destinationTo.decimals, toDecimals]);
+
+  const memoizedPricesTokenFrom = useMemo(() => getAmount && getAmount.inUSD ? getAmount.inUSD : 0, [getAmount]);
+
+  const memoizedPricesTokenTo = useMemo(() => getAmount && getAmount.outUSD ? getAmount.outUSD : 0, [getAmount]);
 
   const handleSwap = useCallback(async () => {
     try {
@@ -298,8 +298,8 @@ export const useSwapForm = () => {
     destinationFrom,
     destinationTo,
     chainId,
-    pricesTokenFrom,
-    pricesTokenTo,
+    memoizedPricesTokenFrom,
+    memoizedPricesTokenTo,
     payAmount,
     slippage,
     memoizedGetOut,

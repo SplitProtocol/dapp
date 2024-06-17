@@ -201,7 +201,7 @@ export const SwapFormHome: FC<SwapFormHomeProps> = (props) => {
             )}
           </div>
         </div>
-      </div>
+      </div> 
       {isDisplayedInputs && (
         <>
           <InputAmountPay
