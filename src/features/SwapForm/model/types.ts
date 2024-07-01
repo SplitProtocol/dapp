@@ -44,7 +44,7 @@ export type SwapState = {
   partner?: string;
   partnerShare?: string;
   burnAmount?: number;
-  slippage?: number;
+  slippage: number;
   stopLoss?: string;
   takeProfit?: string;
   trailingStopLoss?: string;

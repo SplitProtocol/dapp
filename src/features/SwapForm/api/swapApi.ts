@@ -46,9 +46,10 @@ export const fetchTokenGetOutAmount = async (
 };
 
 export const swapTokens = async (state: SwapState) => {
-  const { fromChainID, ...restState } = state;
+  const { fromChainID, slippage, ...restState } = state;
   const body: SwapBody = {
-    ...restState
+    ...restState,
+    slippage: slippage * 100,
   }
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/${fromChainID}/swap`,
@@ -68,7 +69,7 @@ export const swapTokens = async (state: SwapState) => {
 };
 
 export const swapTokenCross = async (state: SwapState) => {
-  const { fromChainID, destChainID, fromToken, toToken, trader, volume } = state;
+  const { fromChainID, destChainID, fromToken, toToken, trader, volume } = state;  
   const response = await fetch(
     `https://li.quest/v1/quote?fromChain=${fromChainID}&toChain=${destChainID}&fromToken=${fromToken}&toToken=${toToken}&fromAddress=${trader}&toAddress=${trader}&fromAmount=${volume}&order=RECOMMENDED`,
     {

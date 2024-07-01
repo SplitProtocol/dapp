@@ -25,6 +25,7 @@ import {
   usePendingTransactionStore,
 } from "@/entities/Transaction";
 import { errorHandler } from "@/shared/api/apiClient";
+import { calculateTokenApproveAmount } from "@/shared/lib/utils";
 
 export const useSwapForm = () => {
   const { chainId, connector, address } = useAccount();
@@ -121,7 +122,10 @@ export const useSwapForm = () => {
 
   const memoizedGetOut = useMemo(() => {
     if (getAmount && destinationTo.decimals) {
-      const amount = ethers.formatUnits(getAmount.out, typeof toDecimals === "number" ? toDecimals : 18);
+      const amount = ethers.formatUnits(
+        getAmount.out,
+        typeof toDecimals === "number" ? toDecimals : 18
+      );
       const formattedAmount = parseFloat(amount).toFixed(8);
       return formattedAmount;
     } else {
@@ -129,9 +133,15 @@ export const useSwapForm = () => {
     }
   }, [getAmount, destinationTo.decimals, toDecimals]);
 
-  const memoizedPricesTokenFrom = useMemo(() => getAmount && getAmount.inUSD ? getAmount.inUSD : 0, [getAmount]);
+  const memoizedPricesTokenFrom = useMemo(
+    () => (getAmount && getAmount.inUSD ? getAmount.inUSD : 0),
+    [getAmount]
+  );
 
-  const memoizedPricesTokenTo = useMemo(() => getAmount && getAmount.outUSD ? getAmount.outUSD : 0, [getAmount]);
+  const memoizedPricesTokenTo = useMemo(
+    () => (getAmount && getAmount.outUSD ? getAmount.outUSD : 0),
+    [getAmount]
+  );
 
   const handleSwap = useCallback(async () => {
     try {
@@ -160,6 +170,7 @@ export const useSwapForm = () => {
         unsignedHash: singMessages?.unsignedHash,
         signedHash: singMessages?.signedHash,
         destChainID: destinationTo.chainId,
+        slippage: Number(slippage),
         fromChainID: destinationFrom.chainId,
       };
       if (destinationTo.chainId !== destinationFrom.chainId) {
@@ -189,13 +200,15 @@ export const useSwapForm = () => {
         !destinationTo.chainId
       )
         return;
+      const totalApproveAmount = await calculateTokenApproveAmount(payAmount, destinationFrom.decimals, 5);
       const tx = await approve(
         destinationFrom.address as `0x${string}`,
         destinationFrom.chainId === destinationTo.chainId
           ? import.meta.env.VITE_ROUTER_CONTRACT
           : import.meta.env.VITE_LIFI_ROUTER,
         destinationFrom.chainId,
-        BigInt(Number(payAmount) * 10 ** destinationFrom.decimals).toString(),
+
+        totalApproveAmount,
         setIsPending,
         addTransaction
       );

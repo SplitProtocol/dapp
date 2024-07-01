@@ -55,3 +55,10 @@ export const isValidEthereumAddress = (address: string) => {
   const regex = /^0x[a-fA-F0-9]{40}$/;
   return regex.test(address);
 };
+
+export const calculateTokenApproveAmount = async (payAmount: string, decimals: number, percentage: number) => {
+  const amountBigInt = BigInt(Number(payAmount) * 10 ** decimals);
+  const result = amountBigInt + (amountBigInt * BigInt(percentage)) / BigInt(100);
+
+  return result.toString();
+}
