@@ -11,7 +11,7 @@ export const loginByReferralCode = async (
   const response = await fetch(
     `${
       import.meta.env.DEV ? "/splitexapi" : import.meta.env.VITE_API_URL
-    }/${chainId}/auth`,
+    }/${chainId}/authUser`,
     {
       method: "POST" as const,
       body: JSON.stringify(restState),
