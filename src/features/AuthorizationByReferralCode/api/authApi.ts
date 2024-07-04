@@ -13,6 +13,10 @@ export const loginByReferralCode = async (
       import.meta.env.DEV ? "/splitexapi" : import.meta.env.VITE_API_URL
     }/${chainId}/authUser`,
     {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
       method: "POST" as const,
       body: JSON.stringify(restState),
     }
