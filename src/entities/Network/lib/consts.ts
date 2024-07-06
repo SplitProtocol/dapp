@@ -5,7 +5,7 @@ export const networkScannerLink = {
   250: 'https://ftmscan.com',
   56: 'https://bscscan.com',
   137: 'https://polygonscan.com',
-  8453: 'https://basescan.org'
+  // 8453: 'https://basescan.org'
 }
 
 export const newtworkOnCaption = {
@@ -15,7 +15,7 @@ export const newtworkOnCaption = {
   250: 'on Fantom',
   56: 'on BSC',
   137: 'on Polygon',
-  8453: 'on Base',
+  // 8453: 'on Base',
 }
 
 export const newtworkName = {
@@ -25,7 +25,7 @@ export const newtworkName = {
   250: 'fantom',
   56: 'bsc',
   137: 'polygon',
-  8453: 'base'
+  // 8453: 'base'
 }
 
 export const newtworkNameByName = {
@@ -35,5 +35,5 @@ export const newtworkNameByName = {
   fantom: 'fantom',
   bsc: 'bsc',
   polygon: 'polygon',
-  base: 'base',
+  // base: 'base',
 }

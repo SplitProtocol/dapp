@@ -5,7 +5,7 @@ import {
   Ethereum,
   Fantom,
   Polygon,
-  Base,
+  // Base,
 } from "@/shared/ui/SWG";
 
 export const networkLogos = {
@@ -15,7 +15,7 @@ export const networkLogos = {
   42161: <ArbitrumOne />,
   56: <BSC />,
   250: <Fantom />,
-  8453: <Base />,
+  // 8453: <Base />,
 } as const;
 
 export const renderNewtworkLogoByChainId = (chaindId: number) => {

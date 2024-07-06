@@ -1,5 +1,5 @@
 import { http, createConfig } from "wagmi";
-import { arbitrum, avalanche, bsc, fantom, mainnet, polygon, base } from "wagmi/chains";
+import { arbitrum, avalanche, bsc, fantom, mainnet, polygon } from "wagmi/chains";
 import { walletConnect, injected, coinbaseWallet } from "wagmi/connectors";
 
 const projectId = import.meta.env.VITE_PROJECT_ID;
@@ -13,7 +13,7 @@ const metadata = {
 };
 
 export const wagmiConfig = createConfig({
-  chains: [mainnet, arbitrum, avalanche, fantom, bsc, polygon, base],
+  chains: [mainnet, arbitrum, avalanche, fantom, bsc, polygon],
   transports: {
     [mainnet.id]: http(),
     [arbitrum.id]: http(),
@@ -21,7 +21,7 @@ export const wagmiConfig = createConfig({
     [fantom.id]: http(),
     [bsc.id]: http(),
     [polygon.id]: http(),
-    [base.id]: http(),
+    // [base.id]: http(),
   },
   connectors: [
     walletConnect({ projectId, metadata, showQrModal: false }),
